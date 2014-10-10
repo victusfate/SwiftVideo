@@ -499,6 +499,7 @@
 				9BD3314319E73F1300594F7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9BD3314419E73F1300594F7E /* Build configuration list for PBXNativeTarget "SwiftVideoTests" */ = {
 			isa = XCConfigurationList;
@@ -507,6 +508,7 @@
 				9BD3314619E73F1300594F7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
