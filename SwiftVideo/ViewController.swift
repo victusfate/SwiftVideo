@@ -361,7 +361,7 @@ class ViewController: UIViewController {
             //            val = 1.0;
             returnFilter = GPUImageAdaptiveThresholdFilter()
             var localFilter = returnFilter as GPUImageAdaptiveThresholdFilter
-            localFilter.blurRadiusPixels = val
+            localFilter.blurRadiusInPixels = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_AVERAGELUMINANCETHRESHOLD:
             //            val = 1.0;
@@ -371,7 +371,7 @@ class ViewController: UIViewController {
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CROP:
             //            val = 0.5;
-            returnFilter = GPUImageCropFilter(CGRectMake(0.0, 0.0, 1.0, val))
+            returnFilter = GPUImageCropFilter( cropRegion: CGRectMake(0.0, 0.0, 1.0, val))
             //            localFilter.cropRegion = CGRectMake(0.0, 0.0, 1.0, val)
 
         case GPUImageShowcaseFilterType.GPUIMAGE_MASK:
@@ -519,11 +519,9 @@ class ViewController: UIViewController {
             //                { 0.0f,  1.0f, 2.0f}
             //            }];
             var localFilter = returnFilter as GPUImage3x3ConvolutionFilter
-            localFilter.convolutionKernel = [
-                [-1.0,  0.0, 1.0],
-                [-2.0,  0.0, 2.0],
-                [-1.0,  0.0, 1.0]
-            ] as GPUMatrix3x3
+            localFilter.convolutionKernel.one = GPUVector3(one: -1.0,two: 0.0,three: 1.0)
+            localFilter.convolutionKernel.two = GPUVector3(one: -2.0,two: 0.0,three: 2.0)
+            localFilter.convolutionKernel.three = GPUVector3(one: -1.0,two: 0.0,three: 1.0)
             
             //            [(GPUImage3x3ConvolutionFilter *)localFilter.setConvolutionKernel:(GPUMatrix3x3){
             //                {1.0f,  1.0f, 1.0f},
@@ -586,25 +584,25 @@ class ViewController: UIViewController {
 
         case GPUImageShowcaseFilterType.GPUIMAGE_DILATION:
             //            val = 4.0;
-            returnFilter = GPUImageRGBDilationFilter( radius: val)
+            returnFilter = GPUImageRGBDilationFilter( radius: uival)
 
         case GPUImageShowcaseFilterType.GPUIMAGE_EROSION:
             //            val = 4.0;
-            returnFilter = GPUImageRGBErosionFilter().initWithRadius(val)
+            returnFilter = GPUImageRGBErosionFilter( radius: uival)
 
         case GPUImageShowcaseFilterType.GPUIMAGE_OPENING:
             //            val = 4.0;
-            returnFilter = GPUImageRGBOpeningFilter().initWithRadius(val)
+            returnFilter = GPUImageRGBOpeningFilter( radius: uival )
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CLOSING:
             //            val = 4.0;
-            returnFilter = GPUImageRGBClosingFilter( radius: val)
+            returnFilter = GPUImageRGBClosingFilter( radius: uival)
         
         case GPUImageShowcaseFilterType.GPUIMAGE_PERLINNOISE:
             //            val = 8.0;
             returnFilter = GPUImagePerlinNoiseFilter()
             var localFilter = returnFilter as GPUImagePerlinNoiseFilter
-            localFilter.scale = val
+            localFilter.scale = Float(val)
 
         case GPUImageShowcaseFilterType.GPUIMAGE_VORONOI:
             //            self.title = @"Voronoi";
@@ -627,7 +625,7 @@ class ViewController: UIViewController {
             //            videoCamera.addTarget(filter)
             //            jfa.addTarget(filter)
             //            sourcePicture.(processImage)
-            NSException(exceptionWithName:"GPUIMAGE_VORNOI unsupported", reason: "GPUIMAGE_VORNOI is unsupported", userInfo:nil).raise()
+            NSException(name:"GPUIMAGE_VORNOI unsupported", reason: "GPUIMAGE_VORNOI is unsupported", userInfo:nil).raise()
 
         case GPUImageShowcaseFilterType.GPUIMAGE_MOSAIC:
             //            val = 0.025;
