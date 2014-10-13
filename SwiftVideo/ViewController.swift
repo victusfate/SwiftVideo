@@ -154,798 +154,716 @@ class ViewController: UIViewController {
     var mSDAVAssetExportSession: SDAVAssetExportSession?
     
     
-    func createFilter(  filterType:GPUImageShowcaseFilterType, val: Float32) -> GPUImageFilter
+    func createFilter(  filterType:GPUImageShowcaseFilterType, params: NSDictionary ) -> GPUImageOutput
     {
-        var pFilter: GPUImageFilter?
+        var returnFilter: GPUImageOutput
+        var val = params.objectForKey("val") as CGFloat
+        var uival = UInt(round(val))
         
-        switch filterType
-        {
+        switch filterType {
             
-            case GPUImageShowcaseFilterType.GPUIMAGE_SEPIA:
+        case GPUImageShowcaseFilterType.GPUIMAGE_SEPIA:
+        //             val = 1.0
+            returnFilter = GPUImageSepiaFilter()
+            var localFilter = returnFilter as GPUImageSepiaFilter
+            localFilter.intensity = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_PIXELLATE:
+        //             val = 0.05;
+            returnFilter = GPUImagePixellateFilter();
+            var localFilter = returnFilter as  GPUImagePixellateFilter
+            localFilter.fractionalWidthOfAPixel = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_POLARPIXELLATE:
+        //            val = 0.05;
+            returnFilter = GPUImagePolarPixellateFilter()
+            var localFilter = returnFilter as  GPUImagePolarPixellateFilter
+            localFilter.pixelSize = CGSizeMake(val,val)
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_PIXELLATE_POSITION:
+        //            val = 0.25;
+            returnFilter = GPUImagePixellatePositionFilter()
+            var localFilter = returnFilter as  GPUImagePixellatePositionFilter
+            localFilter.radius = val
             
-                //            val = 1.0;
-                pFilter = GPUImageSepiaFilter();
-                (pFilter as GPUImageSepiaFilter).setIntensity(val)
+        case GPUImageShowcaseFilterType.GPUIMAGE_POLKADOT:
+        //            val = 0.05;
+            returnFilter = GPUImagePolkaDotFilter()
+            var localFilter = returnFilter as  GPUImagePolkaDotFilter
+            localFilter.fractionalWidthOfAPixel = val
             
-/*            case GPUIMAGE_PIXELLATE:
-            {
-            //            val = 0.05;
-            pFilter = [[GPUImagePixellateFilter alloc] init];
-            [(GPUImagePixellateFilter*)pFilter setFractionalWidthOfAPixel:val];
-            }
-            case GPUIMAGE_POLARPIXELLATE:
-            {
-            //            val = 0.05;
-            pFilter = [[GPUImagePolarPixellateFilter alloc] init];
-            [(GPUImagePolarPixellateFilter*)pFilter setPixelSize:CGSizeMake(val,val)];
-            }
-            case GPUIMAGE_PIXELLATE_POSITION:
-            {
-            //            val = 0.25;
-            pFilter = [[GPUImagePixellatePositionFilter alloc] init];
-            [(GPUImagePixellatePositionFilter*)pFilter setRadius:val];
-            }
-            case GPUIMAGE_POLKADOT:
-            {
-            //            val = 0.05;
-            pFilter = [[GPUImagePolkaDotFilter alloc] init];
-            [(GPUImagePolkaDotFilter*)pFilter setFractionalWidthOfAPixel:val];
-            }
-            case GPUIMAGE_HALFTONE:
-            {
-            //            val = 0.01;
-            pFilter = [[GPUImageHalftoneFilter alloc] init];
-            [(GPUImageHalftoneFilter*)pFilter setFractionalWidthOfAPixel:val];
-            }
-            case GPUIMAGE_CROSSHATCH:
-            {
-            //            val = 0.01;
-            pFilter = [[GPUImageCrosshatchFilter alloc] init];
-            [(GPUImageCrosshatchFilter *)pFilter setCrossHatchSpacing:val];
-            }
-            case GPUIMAGE_COLORINVERT:
-            {
-            pFilter = [[GPUImageColorInvertFilter alloc] init];
-            }
-            case GPUIMAGE_GRAYSCALE:
-            {
-            pFilter = [[GPUImageGrayscaleFilter alloc] init];
-            }
-            case GPUIMAGE_MONOCHROME:
-            {
+        case GPUImageShowcaseFilterType.GPUIMAGE_HALFTONE:
+        //            val = 0.01;
+            returnFilter = GPUImageHalftoneFilter()
+            var localFilter = returnFilter as  GPUImageHalftoneFilter
+            localFilter.fractionalWidthOfAPixel = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CROSSHATCH:
+        //            val = 0.01;
+            returnFilter = GPUImageCrosshatchFilter()
+            var localFilter = returnFilter as  GPUImageCrosshatchFilter
+            localFilter.crossHatchSpacing = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_COLORINVERT:
+            returnFilter = GPUImageColorInvertFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_GRAYSCALE:
+            returnFilter = GPUImageGrayscaleFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_MONOCHROME:
+        //            val = 1.0;
+            returnFilter = GPUImageMonochromeFilter()
+            var localFilter = returnFilter as GPUImageMonochromeFilter
+            localFilter.color = GPUVector4(one:0.0, two:0.0, three:1.0, four:1.0)
+            localFilter.intensity = val
+            
+        case GPUImageShowcaseFilterType.GPUIMAGE_FALSECOLOR:
+            returnFilter = GPUImageFalseColorFilter()
+            
+        case GPUImageShowcaseFilterType.GPUIMAGE_SOFTELEGANCE:
+            returnFilter = GPUImageSoftEleganceFilter()
+            
+        case GPUImageShowcaseFilterType.GPUIMAGE_MISSETIKATE:
+            returnFilter = GPUImageMissEtikateFilter()
+            
+        case GPUImageShowcaseFilterType.GPUIMAGE_AMATORKA:
+            returnFilter = GPUImageAmatorkaFilter()
+       
+        case GPUImageShowcaseFilterType.GPUIMAGE_SATURATION:
             //            val = 1.0;
-            pFilter = [[GPUImageMonochromeFilter alloc] init];
-            [(GPUImageMonochromeFilter *)pFilter setColor:(GPUVector4){0.0f, 0.0f, 1.0f, 1.f}];
-            [(GPUImageMonochromeFilter *)pFilter setIntensity:val];
-            }
-            case GPUIMAGE_FALSECOLOR:
-            {
-            pFilter = [[GPUImageFalseColorFilter alloc] init];
-            }
-            case GPUIMAGE_SOFTELEGANCE:
-            {
-            pFilter = (GPUImageFilter*)[[GPUImageSoftEleganceFilter alloc] init];
-            }
-            case GPUIMAGE_MISSETIKATE:
-            {
-            pFilter = (GPUImageFilter*)[[GPUImageMissEtikateFilter alloc] init];
-            }
-            case GPUIMAGE_AMATORKA:
-            {
-            pFilter = (GPUImageFilter*)[[GPUImageAmatorkaFilter alloc] init];
-            }
-            
-            case GPUIMAGE_SATURATION:
-            {
+            returnFilter = GPUImageSaturationFilter()
+            var localFilter = returnFilter as GPUImageSaturationFilter
+            localFilter.saturation = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CONTRAST:
             //            val = 1.0;
-            pFilter = [[GPUImageSaturationFilter alloc] init];
-            [(GPUImageSaturationFilter *)pFilter setSaturation:val];
-            
-            }
-            case GPUIMAGE_CONTRAST:
-            {
-            //            val = 1.0;
-            pFilter = [[GPUImageContrastFilter alloc] init];
-            [(GPUImageContrastFilter *)pFilter setContrast:val];
-            
-            }
-            case GPUIMAGE_BRIGHTNESS:
-            {
+            returnFilter = GPUImageContrastFilter()
+            var localFilter = returnFilter as GPUImageContrastFilter
+            localFilter.contrast = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_BRIGHTNESS:
             //            val = 0.2;
-            pFilter = [[GPUImageBrightnessFilter alloc] init];
-            [(GPUImageBrightnessFilter *)pFilter setBrightness:val];
-            
-            }
-            case GPUIMAGE_LEVELS:
-            {
+            returnFilter = GPUImageBrightnessFilter()
+            var localFilter = returnFilter as GPUImageBrightnessFilter
+            localFilter.brightness = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LEVELS:
             //            val = 0.2;
-            pFilter = [[GPUImageLevelsFilter alloc] init];
-            [(GPUImageLevelsFilter *)pFilter setRedMin:val gamma:1.0 max:1.0 minOut:0.0 maxOut:1.0];
-            [(GPUImageLevelsFilter *)pFilter setGreenMin:val gamma:1.0 max:1.0 minOut:0.0 maxOut:1.0];
-            [(GPUImageLevelsFilter *)pFilter setBlueMin:val gamma:1.0 max:1.0 minOut:0.0 maxOut:1.0];
-            }
-            case GPUIMAGE_RGB:
-            {
+            returnFilter = GPUImageLevelsFilter()
+            var localFilter = returnFilter as GPUImageLevelsFilter
+
+            localFilter.setRedMin(val, gamma:1.0, max:1.0, minOut:0.0, maxOut:1.0)
+            localFilter.setGreenMin(val, gamma:1.0, max:1.0, minOut:0.0, maxOut:1.0)
+            localFilter.setBlueMin(val, gamma:1.0, max:1.0, minOut:0.0, maxOut:1.0)
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_RGB:
             //            val = 1.0;
-            pFilter = [[GPUImageRGBFilter alloc] init];
-            [(GPUImageRGBFilter *)pFilter setRed:val];
-            //            [(GPUImageRGBFilter *)pFilter setGreen:val];
-            //            [(GPUImageRGBFilter *)pFilter setBlue:val];
-            }
-            case GPUIMAGE_HUE:
-            {
+            returnFilter = GPUImageRGBFilter()
+            var localFilter = returnFilter as GPUImageRGBFilter
+
+            localFilter.red = val
+            //            localFilter.green = val
+            //            localFilter.blue = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HUE:
             //            val = 90.0;
-            pFilter = [[GPUImageHueFilter alloc] init];
-            [(GPUImageHueFilter *)pFilter setHue:val];
-            
-            }
-            case GPUIMAGE_WHITEBALANCE:
-            {
+            returnFilter = GPUImageHueFilter()
+            var localFilter = returnFilter as GPUImageHueFilter
+            localFilter.hue = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_WHITEBALANCE:
             //            val = 5000.0;
-            pFilter = [[GPUImageWhiteBalanceFilter alloc] init];
-            [(GPUImageWhiteBalanceFilter *)pFilter setTemperature:val];
-            
-            }
-            case GPUIMAGE_EXPOSURE:
-            {
+            returnFilter = GPUImageWhiteBalanceFilter()
+            var localFilter = returnFilter as GPUImageWhiteBalanceFilter
+            localFilter.temperature = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_EXPOSURE:
             //            val = 1.0;
-            pFilter = [[GPUImageExposureFilter alloc] init];
-            [(GPUImageExposureFilter *)pFilter setExposure:val];
-            }
-            case GPUIMAGE_SHARPEN:
-            {
+            returnFilter = GPUImageExposureFilter()
+            var localFilter = returnFilter as GPUImageExposureFilter
+            localFilter.exposure = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SHARPEN:
             //            val = 1.0;
-            pFilter = [[GPUImageSharpenFilter alloc] init];
-            [(GPUImageSharpenFilter *)pFilter setSharpness:val];
-            
-            }
-            case GPUIMAGE_UNSHARPMASK:
-            {
+            returnFilter = GPUImageSharpenFilter()
+            var localFilter = returnFilter as GPUImageSharpenFilter
+            localFilter.sharpness = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_UNSHARPMASK:
             //            val = 1.0;
-            pFilter = (GPUImageFilter*)[[GPUImageUnsharpMaskFilter alloc] init];
-            [(GPUImageUnsharpMaskFilter *)pFilter setIntensity:val];
-            }
-            case GPUIMAGE_GAMMA:
-            {
+            returnFilter = GPUImageUnsharpMaskFilter()
+            var localFilter = returnFilter as GPUImageUnsharpMaskFilter
+            localFilter.intensity = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_GAMMA:
             //            val = 1.0;
-            pFilter = [[GPUImageGammaFilter alloc] init];
-            [(GPUImageGammaFilter *)pFilter setGamma:val];
-            
-            }
-            case GPUIMAGE_TONECURVE:
-            {
+            returnFilter = GPUImageGammaFilter()
+            var localFilter = returnFilter as GPUImageGammaFilter
+            localFilter.gamma = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_TONECURVE:
             //            val = 0.5;
-            Float32 valHi = 1.5 * val;
-            pFilter = [[GPUImageToneCurveFilter alloc] init];
-            [(GPUImageToneCurveFilter *)pFilter setRedControlPoints:[NSArray arrayWithObjects:[NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)], [NSValue valueWithCGPoint:CGPointMake(0.5, val)], [NSValue valueWithCGPoint:CGPointMake(1.0, valHi)], nil]];
-            [(GPUImageToneCurveFilter *)pFilter setBlueControlPoints:[NSArray arrayWithObjects:[NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)], [NSValue valueWithCGPoint:CGPointMake(0.5, val)], [NSValue valueWithCGPoint:CGPointMake(1.0, valHi)], nil]];
-            [(GPUImageToneCurveFilter *)pFilter setGreenControlPoints:[NSArray arrayWithObjects:[NSValue valueWithCGPoint:CGPointMake(0.0, 0.0)], [NSValue valueWithCGPoint:CGPointMake(0.5, val)], [NSValue valueWithCGPoint:CGPointMake(1.0, valHi)], nil]];
+            let valHi = 1.5 * val;
+            returnFilter = GPUImageToneCurveFilter()
             
-            }
-            case GPUIMAGE_HIGHLIGHTSHADOW:
-            {
+            var localFilter = returnFilter as GPUImageToneCurveFilter
+            localFilter.redControlPoints = [
+                NSValue(CGPoint:CGPointMake(0.0, 0.0)),
+                NSValue(CGPoint:CGPointMake(0.5, val)),
+                NSValue(CGPoint:CGPointMake(1.0, valHi)) ]
+
+            localFilter.greenControlPoints = [
+                NSValue(CGPoint:CGPointMake(0.0, 0.0)),
+                NSValue(CGPoint:CGPointMake(0.5, val)),
+                NSValue(CGPoint:CGPointMake(1.0, valHi)) ]
+            localFilter.blueControlPoints = [
+                NSValue(CGPoint:CGPointMake(0.0, 0.0)),
+                NSValue(CGPoint:CGPointMake(0.5, val)),
+                NSValue(CGPoint:CGPointMake(1.0, valHi)) ]
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HIGHLIGHTSHADOW:
             //            val = 1.0;
-            pFilter = [[GPUImageHighlightShadowFilter alloc] init];
-            [(GPUImageHighlightShadowFilter *)pFilter setHighlights:val];
-            }
-            case GPUIMAGE_HAZE:
-            {
+            returnFilter = GPUImageHighlightShadowFilter()
+            var localFilter = returnFilter as GPUImageHighlightShadowFilter
+            localFilter.highlights = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HAZE:
             //            val = 0.2;
-            pFilter = [[GPUImageHazeFilter alloc] init];
-            [(GPUImageHazeFilter *)pFilter setDistance:val];
-            }
-            case GPUIMAGE_AVERAGECOLOR:
-            {
-            pFilter = [[GPUImageAverageColor alloc] init];
-            }
-            case GPUIMAGE_LUMINOSITY:
-            {
-            pFilter = [[GPUImageLuminosity alloc] init];
-            }
-            case GPUIMAGE_HISTOGRAM:
-            {
+            returnFilter = GPUImageHazeFilter()
+            var localFilter = returnFilter as GPUImageHazeFilter
+            localFilter.distance = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_AVERAGECOLOR:
+            returnFilter = GPUImageAverageColor()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LUMINOSITY:
+            returnFilter = GPUImageLuminosity()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HISTOGRAM:
             //            val = 16.0;
-            pFilter = [[GPUImageHistogramFilter alloc] initWithHistogramType:kGPUImageHistogramRGB];
-            [(GPUImageHistogramFilter *)pFilter setDownsamplingFactor:round(val)];
-            
-            }
-            case GPUIMAGE_HISTOGRAM_EQUALIZATION:
-            {
+            returnFilter = GPUImageHistogramFilter(histogramType: kGPUImageHistogramRGB)
+            var localFilter = returnFilter as GPUImageHistogramFilter
+            localFilter.downsamplingFactor = uival
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HISTOGRAM_EQUALIZATION:
             //            val = 16.0;
-            pFilter = (GPUImageFilter*)[[GPUImageHistogramEqualizationFilter alloc] initWithHistogramType:kGPUImageHistogramLuminance];
-            [(GPUImageHistogramEqualizationFilter *)pFilter setDownsamplingFactor:round(val)];
-            
-            }
-            case GPUIMAGE_THRESHOLD:
-            {
+            returnFilter = GPUImageHistogramEqualizationFilter(histogramType: kGPUImageHistogramLuminance)
+            var localFilter = returnFilter as GPUImageHistogramEqualizationFilter
+            localFilter.downsamplingFactor = uival
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_THRESHOLD:
             //            val = 0.5;
-            pFilter = [[GPUImageLuminanceThresholdFilter alloc] init];
-            [(GPUImageLuminanceThresholdFilter *)pFilter setThreshold:val];
-            
-            }
-            case GPUIMAGE_ADAPTIVETHRESHOLD:
-            {
+            returnFilter = GPUImageLuminanceThresholdFilter()
+            var localFilter = returnFilter as GPUImageLuminanceThresholdFilter
+            localFilter.threshold = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_ADAPTIVETHRESHOLD:
             //            val = 1.0;
-            pFilter = (GPUImageFilter*)[[GPUImageAdaptiveThresholdFilter alloc] init];
-            [(GPUImageAdaptiveThresholdFilter *)pFilter setBlurRadiusInPixels:val];
-            
-            }
-            case GPUIMAGE_AVERAGELUMINANCETHRESHOLD:
-            {
+            returnFilter = GPUImageAdaptiveThresholdFilter()
+            var localFilter = returnFilter as GPUImageAdaptiveThresholdFilter
+            localFilter.blurRadiusPixels = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_AVERAGELUMINANCETHRESHOLD:
             //            val = 1.0;
-            pFilter = (GPUImageFilter*)[[GPUImageAverageLuminanceThresholdFilter alloc] init];
-            [(GPUImageAverageLuminanceThresholdFilter *)pFilter setThresholdMultiplier:val];
-            
-            }
-            case GPUIMAGE_CROP:
-            {
+            returnFilter = GPUImageAverageLuminanceThresholdFilter()
+            var localFilter = returnFilter as GPUImageAverageLuminanceThresholdFilter
+            localFilter.thresholdMultiplier = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CROP:
             //            val = 0.5;
-            pFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0.0, 0.0, 1.0, val)];
-            //            [(GPUImageCropFilter *)pFilter setCropRegion:CGRectMake(0.0, 0.0, 1.0, val)];
-            }
-            case GPUIMAGE_MASK:
-            {
-            pFilter = [[GPUImageMaskFilter alloc] init];
-            
-            [(GPUImageFilter*)pFilter setBackgroundColorRed:0.0 green:1.0 blue:0.0 alpha:1.0];
-            
-            }
-            case GPUIMAGE_TRANSFORM:
-            {
+            returnFilter = GPUImageCropFilter(CGRectMake(0.0, 0.0, 1.0, val))
+            //            localFilter.cropRegion = CGRectMake(0.0, 0.0, 1.0, val)
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_MASK:
+            returnFilter = GPUImageMaskFilter()
+            var localFilter = returnFilter as GPUImageMaskFilter
+            localFilter.setBackgroundColorRed(0.0, green:1.0, blue:0.0, alpha:1.0)
+        
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_TRANSFORM:
             //            val = 2.0;
-            pFilter = [[GPUImageTransformFilter alloc] init];
-            [(GPUImageTransformFilter *)pFilter setAffineTransform:CGAffineTransformMakeRotation(2.0)];
-            //            [(GPUImageTransformFilter *)pFilter setIgnoreAspectRatio:YES];
-            }
-            case GPUIMAGE_TRANSFORM3D:
-            {
+            returnFilter = GPUImageTransformFilter()
+            var localFilter = returnFilter as GPUImageTransformFilter
+            localFilter.affineTransform = CGAffineTransformMakeRotation(2.0)
+            //            localFilter.setIgnoreAspectRatio(true);
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_TRANSFORM3D:
             //            val = 0.75;
-            pFilter = [[GPUImageTransformFilter alloc] init];
-            CATransform3D perspectiveTransform = CATransform3DIdentity;
-            perspectiveTransform.m34 = 0.4;
-            perspectiveTransform.m33 = 0.4;
-            perspectiveTransform = CATransform3DScale(perspectiveTransform,val, val, val);
-            perspectiveTransform = CATransform3DRotate(perspectiveTransform, val, 0.0, 1.0, 0.0);
+            returnFilter = GPUImageTransformFilter()
+            var perspectiveTransform = CATransform3DIdentity
+            perspectiveTransform.m34 = 0.4
+            perspectiveTransform.m33 = 0.4
+            perspectiveTransform = CATransform3DScale(perspectiveTransform,val, val, val)
+            perspectiveTransform = CATransform3DRotate(perspectiveTransform, val, 0.0, 1.0, 0.0)
             
-            [(GPUImageTransformFilter *)pFilter setTransform3D:perspectiveTransform];
-            }
-            case GPUIMAGE_SOBELEDGEDETECTION:
-            {
+            var localFilter = returnFilter as GPUImageTransformFilter
+            localFilter.transform3D = perspectiveTransform
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SOBELEDGEDETECTION:
             //            val = 0.25;
-            pFilter = [[GPUImageSobelEdgeDetectionFilter alloc] init];
-            [(GPUImageSobelEdgeDetectionFilter *)pFilter setEdgeStrength:val];
-            
-            }
-            case GPUIMAGE_XYGRADIENT:
-            {
-            pFilter = [[GPUImageXYDerivativeFilter alloc] init];
-            }
-            case GPUIMAGE_HARRISCORNERDETECTION:
-            {
+            returnFilter = GPUImageSobelEdgeDetectionFilter()
+            var localFilter = returnFilter as GPUImageSobelEdgeDetectionFilter
+            localFilter.edgeStrength = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_XYGRADIENT:
+            returnFilter = GPUImageXYDerivativeFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HARRISCORNERDETECTION:
             //            val = 0.2;
-            pFilter = (GPUImageFilter*)[[GPUImageHarrisCornerDetectionFilter alloc] init];
-            [(GPUImageHarrisCornerDetectionFilter *)pFilter setThreshold:val];
-            }
-            case GPUIMAGE_NOBLECORNERDETECTION:
-            {
+            returnFilter = GPUImageHarrisCornerDetectionFilter()
+            var localFilter = returnFilter as GPUImageHarrisCornerDetectionFilter
+            localFilter.threshold = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_NOBLECORNERDETECTION:
             //            val = 0.2;
-            pFilter = (GPUImageFilter*)[[GPUImageNobleCornerDetectionFilter alloc] init];
-            [(GPUImageNobleCornerDetectionFilter *)pFilter setThreshold:val];
-            }
-            case GPUIMAGE_SHITOMASIFEATUREDETECTION:
-            {
+            returnFilter = GPUImageNobleCornerDetectionFilter()
+            var localFilter = returnFilter as GPUImageNobleCornerDetectionFilter
+            localFilter.threshold = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SHITOMASIFEATUREDETECTION:
             //            val = 0.2;
-            pFilter = (GPUImageFilter*)[[GPUImageShiTomasiFeatureDetectionFilter alloc] init];
-            [(GPUImageShiTomasiFeatureDetectionFilter *)pFilter setThreshold:val];
-            }
-            case GPUIMAGE_HOUGHTRANSFORMLINEDETECTOR:
-            {
+            returnFilter = GPUImageShiTomasiFeatureDetectionFilter()
+            var localFilter = returnFilter as GPUImageShiTomasiFeatureDetectionFilter
+            localFilter.threshold = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HOUGHTRANSFORMLINEDETECTOR:
             //            val = 0.6;
-            pFilter = (GPUImageFilter*)[[GPUImageHoughTransformLineDetector alloc] init];
-            [(GPUImageHoughTransformLineDetector *)pFilter setLineDetectionThreshold:val];
-            }
-            
-            case GPUIMAGE_PREWITTEDGEDETECTION:
-            {
+            returnFilter = GPUImageHoughTransformLineDetector()
+            var localFilter = returnFilter as GPUImageHoughTransformLineDetector
+            localFilter.lineDetectionThreshold = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_PREWITTEDGEDETECTION:
             //            val = 1.0;
-            pFilter = [[GPUImagePrewittEdgeDetectionFilter alloc] init];
-            [(GPUImagePrewittEdgeDetectionFilter *)pFilter setEdgeStrength:val];
-            
-            }
-            case GPUIMAGE_CANNYEDGEDETECTION:
-            {
+            returnFilter = GPUImagePrewittEdgeDetectionFilter()
+            var localFilter = returnFilter as GPUImagePrewittEdgeDetectionFilter
+            localFilter.edgeStrength = val
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_CANNYEDGEDETECTION:
             //            val = 1.0;
-            pFilter = (GPUImageFilter*)[[GPUImageCannyEdgeDetectionFilter alloc] init];
-            [(GPUImageCannyEdgeDetectionFilter *)pFilter setBlurTexelSpacingMultiplier:val];
-            
-            }
-            case GPUIMAGE_THRESHOLDEDGEDETECTION:
-            {
+            returnFilter = GPUImageCannyEdgeDetectionFilter()
+            var localFilter = returnFilter as GPUImageCannyEdgeDetectionFilter
+            localFilter.blurTexelSpacingMultiplier = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_THRESHOLDEDGEDETECTION:
             //            val = 0.25;
-            pFilter = [[GPUImageThresholdEdgeDetectionFilter alloc] init];
-            [(GPUImageThresholdEdgeDetectionFilter *)pFilter setThreshold:val];
-            
-            }
-            case GPUIMAGE_LOCALBINARYPATTERN:
-            {
+            returnFilter = GPUImageThresholdEdgeDetectionFilter()
+            var localFilter = returnFilter as GPUImageThresholdEdgeDetectionFilter
+            localFilter.threshold = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LOCALBINARYPATTERN:
             //            val = 1.0;
-            pFilter = [[GPUImageLocalBinaryPatternFilter alloc] init];
-            CGFloat multiplier = val;
-            [(GPUImageLocalBinaryPatternFilter *)pFilter setTexelWidth:(multiplier / self.view.bounds.size.width)];
-            [(GPUImageLocalBinaryPatternFilter *)pFilter setTexelHeight:(multiplier / self.view.bounds.size.height)];
-            }
-            case GPUIMAGE_BUFFER:
-            {
-            pFilter = [[GPUImageBuffer alloc] init];
-            }
-            case GPUIMAGE_LOWPASS:
-            {
+            returnFilter = GPUImageLocalBinaryPatternFilter()
+            let multiplier = val as CGFloat;
+            var localFilter = returnFilter as GPUImageLocalBinaryPatternFilter
+            localFilter.texelWidth = multiplier / self.view.bounds.size.width
+            localFilter.texelHeight = multiplier / self.view.bounds.size.height
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_BUFFER:
+            returnFilter = GPUImageBuffer()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LOWPASS:
             //            val = 0.5;
-            pFilter = (GPUImageFilter*)[[GPUImageLowPassFilter alloc] init];
-            [(GPUImageLowPassFilter *)pFilter setFilterStrength:val];
-            
-            }
-            case GPUIMAGE_HIGHPASS:
-            {
+            returnFilter = GPUImageLowPassFilter()
+            var localFilter = returnFilter as GPUImageLowPassFilter
+            localFilter.filterStrength = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HIGHPASS:
             //            val = 0.5;
-            pFilter = (GPUImageFilter*)[[GPUImageHighPassFilter alloc] init];
-            [(GPUImageHighPassFilter *)pFilter setFilterStrength:val];
-            
-            }
-            case GPUIMAGE_MOTIONDETECTOR:
-            {
+            returnFilter = GPUImageHighPassFilter()
+            var localFilter = returnFilter as GPUImageHighPassFilter
+            localFilter.filterStrength = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_MOTIONDETECTOR:
             //            val = 0.5;
-            pFilter = (GPUImageFilter*)[[GPUImageMotionDetector alloc] init];
-            [(GPUImageMotionDetector *)pFilter setLowPassFilterStrength:val];
-            
-            }
-            case GPUIMAGE_SKETCH:
-            {
+            returnFilter = GPUImageMotionDetector()
+            var localFilter = returnFilter as GPUImageMotionDetector
+            localFilter.lowPassFilterStrength = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SKETCH:
             //            val = 0.25;
-            pFilter = [[GPUImageSketchFilter alloc] init];
-            [(GPUImageSketchFilter *)pFilter setEdgeStrength:val];
-            
-            }
-            case GPUIMAGE_THRESHOLDSKETCH:
-            {
+            returnFilter = GPUImageSketchFilter()
+            var localFilter = returnFilter as GPUImageSketchFilter
+            localFilter.edgeStrength = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_THRESHOLDSKETCH:
             //            val = 0.25;
-            pFilter = [[GPUImageThresholdSketchFilter alloc] init];
-            [(GPUImageThresholdSketchFilter *)pFilter setThreshold:val];
-            
-            }
-            case GPUIMAGE_TOON:
-            {
-            pFilter = [[GPUImageToonFilter alloc] init];
-            }
-            case GPUIMAGE_SMOOTHTOON:
-            {
+            returnFilter = GPUImageThresholdSketchFilter()
+            var localFilter = returnFilter as GPUImageThresholdSketchFilter
+            localFilter.threshold = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_TOON:
+            returnFilter = GPUImageToonFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SMOOTHTOON:
             //            val = 1.0;
-            pFilter = (GPUImageFilter*)[[GPUImageSmoothToonFilter alloc] init];
-            [(GPUImageSmoothToonFilter *)pFilter setBlurRadiusInPixels:val];
-            
-            }
-            case GPUIMAGE_TILTSHIFT:
-            {
+            returnFilter = GPUImageSmoothToonFilter()
+            var localFilter = returnFilter as GPUImageSmoothToonFilter
+            localFilter.blurRadiusInPixels = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_TILTSHIFT:
             //            val = 0.5;
-            pFilter = (GPUImageFilter*)[[GPUImageTiltShiftFilter alloc] init];
-            [(GPUImageTiltShiftFilter *)pFilter setTopFocusLevel:val-0.1];
-            [(GPUImageTiltShiftFilter *)pFilter setBottomFocusLevel:val+0.1];
-            [(GPUImageTiltShiftFilter *)pFilter setFocusFallOffRate:0.2];
-            }
-            case GPUIMAGE_CGA:
-            {
-            pFilter = [[GPUImageCGAColorspaceFilter alloc] init];
-            }
-            case GPUIMAGE_CONVOLUTION:
-            {
-            pFilter = [[GPUImage3x3ConvolutionFilter alloc] init];
-            //            [(GPUImage3x3ConvolutionFilter *)pFilter setConvolutionKernel:(GPUMatrix3x3){
+            returnFilter = GPUImageTiltShiftFilter()
+            var localFilter = returnFilter as GPUImageTiltShiftFilter
+            localFilter.topFocusLevel = val - 0.1
+            localFilter.bottomFocusLevel = val + 0.1
+            localFilter.focusFallOffRate = 0.2
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CGA:
+            returnFilter = GPUImageCGAColorspaceFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CONVOLUTION:
+            returnFilter = GPUImage3x3ConvolutionFilter()
+            //            [(GPUImage3x3ConvolutionFilter *)localFilter.setConvolutionKernel:(GPUMatrix3x3){
             //                {-2.0f, -1.0f, 0.0f},
             //                {-1.0f,  1.0f, 1.0f},
             //                { 0.0f,  1.0f, 2.0f}
             //            }];
-            [(GPUImage3x3ConvolutionFilter *)pFilter setConvolutionKernel:(GPUMatrix3x3){
-            {-1.0f,  0.0f, 1.0f},
-            {-2.0f, 0.0f, 2.0f},
-            {-1.0f,  0.0f, 1.0f}
-            }];
+            var localFilter = returnFilter as GPUImage3x3ConvolutionFilter
+            localFilter.convolutionKernel = [
+                [-1.0,  0.0, 1.0],
+                [-2.0,  0.0, 2.0],
+                [-1.0,  0.0, 1.0]
+            ] as GPUMatrix3x3
             
-            //            [(GPUImage3x3ConvolutionFilter *)pFilter setConvolutionKernel:(GPUMatrix3x3){
+            //            [(GPUImage3x3ConvolutionFilter *)localFilter.setConvolutionKernel:(GPUMatrix3x3){
             //                {1.0f,  1.0f, 1.0f},
             //                {1.0f, -8.0f, 1.0f},
             //                {1.0f,  1.0f, 1.0f}
             //            }];
-            //            [(GPUImage3x3ConvolutionFilter *)pFilter setConvolutionKernel:(GPUMatrix3x3){
+            //            [(GPUImage3x3ConvolutionFilter *)localFilter.setConvolutionKernel:(GPUMatrix3x3){
             //                { 0.11f,  0.11f, 0.11f},
             //                { 0.11f,  0.11f, 0.11f},
             //                { 0.11f,  0.11f, 0.11f}
             //            }];
-            }
-            case GPUIMAGE_EMBOSS:
-            {
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_EMBOSS:
             //            val = 1.0;
-            pFilter = [[GPUImageEmbossFilter alloc] init];
-            [(GPUImageEmbossFilter *)pFilter setIntensity:val];
-            
-            }
-            case GPUIMAGE_LAPLACIAN:
-            {
-            pFilter = [[GPUImageLaplacianFilter alloc] init];
-            }
-            case GPUIMAGE_POSTERIZE:
-            {
+            returnFilter = GPUImageEmbossFilter()
+            var localFilter = returnFilter as GPUImageEmbossFilter
+            localFilter.intensity = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LAPLACIAN:
+            returnFilter = GPUImageLaplacianFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_POSTERIZE:
             //            val = 10.0;
-            pFilter = [[GPUImagePosterizeFilter alloc] init];
-            [(GPUImagePosterizeFilter *)pFilter setColorLevels:round(val)];
-            
-            }
-            case GPUIMAGE_SWIRL:
-            {
+            returnFilter = GPUImagePosterizeFilter()
+            var localFilter = returnFilter as GPUImagePosterizeFilter
+            localFilter.colorLevels = uival
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SWIRL:
             //            val = 1.0;
-            pFilter = [[GPUImageSwirlFilter alloc] init];
-            [(GPUImageSwirlFilter *)pFilter setAngle:val];
-            
-            }
-            case GPUIMAGE_BULGE:
-            {
+            returnFilter = GPUImageSwirlFilter()
+            var localFilter = returnFilter as GPUImageSwirlFilter
+            localFilter.angle = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_BULGE:
             //            val = 0.5;
-            pFilter = [[GPUImageBulgeDistortionFilter alloc] init];
-            [(GPUImageBulgeDistortionFilter *)pFilter setScale:val];
-            
-            }
-            case GPUIMAGE_SPHEREREFRACTION:
-            {
+            returnFilter = GPUImageBulgeDistortionFilter()
+            var localFilter = returnFilter as GPUImageBulgeDistortionFilter
+            localFilter.scale = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SPHEREREFRACTION:
             //            val = 0.15;
-            pFilter = [[GPUImageSphereRefractionFilter alloc] init];
-            [(GPUImageSphereRefractionFilter *)pFilter setRadius:val];
-            }
-            case GPUIMAGE_GLASSSPHERE:
-            {
+            returnFilter = GPUImageSphereRefractionFilter()
+            var localFilter = returnFilter as GPUImageSphereRefractionFilter
+            localFilter.radius = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_GLASSSPHERE:
             //            val = 0.15;
-            pFilter = [[GPUImageGlassSphereFilter alloc] init];
-            [(GPUImageGlassSphereFilter *)pFilter setRadius:val];
-            }
-            case GPUIMAGE_PINCH:
-            {
+            returnFilter = GPUImageGlassSphereFilter()
+            var localFilter = returnFilter as GPUImageGlassSphereFilter
+            localFilter.radius = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_PINCH:
             //            val = 0.5;
-            pFilter = [[GPUImagePinchDistortionFilter alloc] init];
-            [(GPUImagePinchDistortionFilter *)pFilter setScale:val];
-            
-            }
-            case GPUIMAGE_STRETCH:
-            {
-            pFilter = [[GPUImageStretchDistortionFilter alloc] init];
-            }
-            case GPUIMAGE_DILATION:
-            {
+            returnFilter = GPUImagePinchDistortionFilter()
+            var localFilter = returnFilter as GPUImagePinchDistortionFilter
+            localFilter.scale = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_STRETCH:
+            returnFilter = GPUImageStretchDistortionFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_DILATION:
             //            val = 4.0;
-            pFilter = [[GPUImageRGBDilationFilter alloc] initWithRadius:val];
-            }
-            case GPUIMAGE_EROSION:
-            {
+            returnFilter = GPUImageRGBDilationFilter( radius: val)
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_EROSION:
             //            val = 4.0;
-            pFilter = [[GPUImageRGBErosionFilter alloc] initWithRadius:val];
-            }
-            case GPUIMAGE_OPENING:
-            {
+            returnFilter = GPUImageRGBErosionFilter().initWithRadius(val)
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_OPENING:
             //            val = 4.0;
-            pFilter = (GPUImageFilter*)[[GPUImageRGBOpeningFilter alloc] initWithRadius:val];
-            
-            }
-            case GPUIMAGE_CLOSING:
-            {
+            returnFilter = GPUImageRGBOpeningFilter().initWithRadius(val)
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CLOSING:
             //            val = 4.0;
-            pFilter = (GPUImageFilter*)[[GPUImageRGBClosingFilter alloc] initWithRadius:val];
-            }
-            
-            case GPUIMAGE_PERLINNOISE:
-            {
+            returnFilter = GPUImageRGBClosingFilter( radius: val)
+        
+        case GPUImageShowcaseFilterType.GPUIMAGE_PERLINNOISE:
             //            val = 8.0;
-            pFilter = [[GPUImagePerlinNoiseFilter alloc] init];
-            [(GPUImagePerlinNoiseFilter *)pFilter setScale:val];
-            
-            }
-            case GPUIMAGE_VORONOI:
-            {
+            returnFilter = GPUImagePerlinNoiseFilter()
+            var localFilter = returnFilter as GPUImagePerlinNoiseFilter
+            localFilter.scale = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_VORONOI:
             //            self.title = @"Voronoi";
             //            self.filterSettingsSlider.hidden = YES;
             //
-            //            GPUImageJFAVoronoiFilter *jfa = [[GPUImageJFAVoronoiFilter alloc] init];
-            //            [jfa setSizeInPixels:CGSizeMake(1024.0, 1024.0)];
+            //            GPUImageJFAVoronoiFilter jfa = GPUImageJFAVoronoiFilter()
+            //            jfa.sizeInPixels = CGSizeMake(1024.0, 1024.0)
             //
-            //            sourcePicture = [[GPUImagePicture alloc] initWithImage:[UIImage imageNamed:@"voroni_points2.png"]];
+            //            sourcePicture = GPUImagePicture().initWithImage("voroni_points2.png")
             //
-            //            [sourcePicture addTarget:jfa];
+            //            sourcePicture.addTarget(jfa)
             //
-            //            pFilter = [[GPUImageVoronoiConsumerFilter alloc] init];
+            //            returnFilter = GPUImageVoronoiConsumerFilter()
             //
-            //            [jfa setSizeInPixels:CGSizeMake(1024.0, 1024.0)];
-            //            [(GPUImageVoronoiConsumerFilter *)pFilter setSizeInPixels:CGSizeMake(1024.0, 1024.0)];
-            //            [(*)pFilter :val];
+            //            jfa.sizeInPixels = CGSizeMake(1024.0, 1024.0)
+            //            var localFilter = returnFilter as GPUImageVornoiConsumerFilter
+            //            localFilter.sizeInPixels = CGSizeMake(1024.0, 1024.0)
             //
             //
-            //            [videoCamera addTarget:filter];
-            //            [jfa addTarget:filter];
-            //            [sourcePicture processImage];
-            NSException *exception = [NSException exceptionWithName:@"GPUIMAGE_VORNOI unsupported" reason:[NSString stringWithFormat:@"GPUIMAGE_VORNOI is unsupported"] userInfo:nil];
-            @throw exception;
-            return nil;
-            }
-            case GPUIMAGE_MOSAIC:
-            {
+            //            videoCamera.addTarget(filter)
+            //            jfa.addTarget(filter)
+            //            sourcePicture.(processImage)
+            NSException(exceptionWithName:"GPUIMAGE_VORNOI unsupported", reason: "GPUIMAGE_VORNOI is unsupported", userInfo:nil).raise()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_MOSAIC:
             //            val = 0.025;
-            pFilter = [[GPUImageMosaicFilter alloc] init];
-            [(GPUImageMosaicFilter *)pFilter setDisplayTileSize:CGSizeMake(val,val)];
+            returnFilter = GPUImageMosaicFilter()
+            var localFilter = returnFilter as GPUImageMosaicFilter
+            localFilter.displayTileSize = CGSizeMake(val,val)
+            localFilter.setTileSet("squares.png")
+            localFilter.setColorOn(false)
+            localFilter.setTileSet("dotletterstiles.png")
+            localFilter.setTileSet("curvies.png")
             
-            [(GPUImageMosaicFilter *)pFilter setTileSet:@"squares.png"];
-            [(GPUImageMosaicFilter *)pFilter setColorOn:NO];
-            //[(GPUImageMosaicFilter *)pFilter setTileSet:@"dotletterstiles.png"];
-            //[(GPUImageMosaicFilter *)pFilter setTileSet:@"curvies.png"];
-            
-            }
-            case GPUIMAGE_CHROMAKEY:
-            {
+        case GPUImageShowcaseFilterType.GPUIMAGE_CHROMAKEY:
             //            val = 0.4;
-            pFilter = [[GPUImageChromaKeyBlendFilter alloc] init];
-            [(GPUImageChromaKeyBlendFilter *)pFilter setColorToReplaceRed:0.0 green:1.0 blue:0.0];
-            [(GPUImageChromaKeyBlendFilter *)pFilter setThresholdSensitivity:val];
-            
-            }
-            case GPUIMAGE_CHROMAKEYNONBLEND:
-            {
+            returnFilter = GPUImageChromaKeyBlendFilter()
+            var localFilter = returnFilter as GPUImageChromaKeyBlendFilter
+            localFilter.setColorToReplaceRed(0.0, green:1.0, blue:0.0)
+            localFilter.thresholdSensitivity = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CHROMAKEYNONBLEND:
             //            val = 0.4;
-            pFilter = [[GPUImageChromaKeyFilter alloc] init];
-            [(GPUImageChromaKeyFilter *)pFilter setColorToReplaceRed:0.0 green:1.0 blue:0.0];
-            [(GPUImageChromaKeyFilter *)pFilter setThresholdSensitivity:val];
-            
-            }
-            case GPUIMAGE_ADD:
-            {
-            pFilter = [[GPUImageAddBlendFilter alloc] init];
-            }
-            case GPUIMAGE_DIVIDE:
-            {
-            pFilter = [[GPUImageDivideBlendFilter alloc] init];
-            }
-            case GPUIMAGE_MULTIPLY:
-            {
-            pFilter = [[GPUImageMultiplyBlendFilter alloc] init];
-            }
-            case GPUIMAGE_OVERLAY:
-            {
-            pFilter = [[GPUImageOverlayBlendFilter alloc] init];
-            }
-            case GPUIMAGE_LIGHTEN:
-            {
-            pFilter = [[GPUImageLightenBlendFilter alloc] init];
-            }
-            case GPUIMAGE_DARKEN:
-            {
-            pFilter = [[GPUImageDarkenBlendFilter alloc] init];
-            }
-            case GPUIMAGE_DISSOLVE:
-            {
+            returnFilter = GPUImageChromaKeyFilter()
+            var localFilter = returnFilter as GPUImageChromaKeyFilter
+            localFilter.colorToReplace = [red:0.0, green:1.0, blue:0.0];
+            localFilter.thresholdSensitivity = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_ADD:
+            returnFilter = GPUImageAddBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_DIVIDE:
+            returnFilter = GPUImageDivideBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_MULTIPLY:
+            returnFilter = GPUImageMultiplyBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_OVERLAY:
+            returnFilter = GPUImageOverlayBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LIGHTEN:
+            returnFilter = GPUImageLightenBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_DARKEN:
+            returnFilter = GPUImageDarkenBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_DISSOLVE:
             //            val = 0.5;
-            pFilter = [[GPUImageDissolveBlendFilter alloc] init];
-            [(GPUImageDissolveBlendFilter *)pFilter setMix:val];
-            
-            }
-            case GPUIMAGE_SCREENBLEND:
-            {
-            pFilter = [[GPUImageScreenBlendFilter alloc] init];
-            }
-            case GPUIMAGE_COLORBURN:
-            {
-            pFilter = [[GPUImageColorBurnBlendFilter alloc] init];
-            }
-            case GPUIMAGE_COLORDODGE:
-            {
-            pFilter = [[GPUImageColorDodgeBlendFilter alloc] init];
-            }
-            case GPUIMAGE_LINEARBURN:
-            {
-            pFilter = [[GPUImageLinearBurnBlendFilter alloc] init];
-            }
-            case GPUIMAGE_EXCLUSIONBLEND:
-            {
-            pFilter = [[GPUImageExclusionBlendFilter alloc] init];
-            }
-            case GPUIMAGE_DIFFERENCEBLEND:
-            {
-            pFilter = [[GPUImageDifferenceBlendFilter alloc] init];
-            }
-            case GPUIMAGE_SUBTRACTBLEND:
-            {
-            pFilter = [[GPUImageSubtractBlendFilter alloc] init];
-            }
-            case GPUIMAGE_HARDLIGHTBLEND:
-            {
-            pFilter = [[GPUImageHardLightBlendFilter alloc] init];
-            }
-            case GPUIMAGE_SOFTLIGHTBLEND:
-            {
-            pFilter = [[GPUImageSoftLightBlendFilter alloc] init];
-            }
-            case GPUIMAGE_COLORBLEND:
-            {
-            pFilter = [[GPUImageColorBlendFilter alloc] init];
-            }
-            case GPUIMAGE_HUEBLEND:
-            {
-            pFilter = [[GPUImageHueBlendFilter alloc] init];
-            }
-            case GPUIMAGE_SATURATIONBLEND:
-            {
-            pFilter = [[GPUImageSaturationBlendFilter alloc] init];
-            }
-            case GPUIMAGE_LUMINOSITYBLEND:
-            {
-            pFilter = [[GPUImageLuminosityBlendFilter alloc] init];
-            }
-            case GPUIMAGE_NORMALBLEND:
-            {
-            pFilter = [[GPUImageNormalBlendFilter alloc] init];
-            }
-            case GPUIMAGE_POISSONBLEND:
-            {
+            returnFilter = GPUImageDissolveBlendFilter()
+            var localFilter = returnFilter as GPUImageDissolveBlendFilter
+            localFilter.mix = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SCREENBLEND:
+            returnFilter = GPUImageScreenBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_COLORBURN:
+            returnFilter = GPUImageColorBurnBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_COLORDODGE:
+            returnFilter = GPUImageColorDodgeBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LINEARBURN:
+            returnFilter = GPUImageLinearBurnBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_EXCLUSIONBLEND:
+            returnFilter = GPUImageExclusionBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_DIFFERENCEBLEND:
+            returnFilter = GPUImageDifferenceBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SUBTRACTBLEND:
+            returnFilter = GPUImageSubtractBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HARDLIGHTBLEND:
+            returnFilter = GPUImageHardLightBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SOFTLIGHTBLEND:
+            returnFilter = GPUImageSoftLightBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_COLORBLEND:
+            returnFilter = GPUImageColorBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_HUEBLEND:
+            returnFilter = GPUImageHueBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_SATURATIONBLEND:
+            returnFilter = GPUImageSaturationBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_LUMINOSITYBLEND:
+            returnFilter = GPUImageLuminosityBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_NORMALBLEND:
+            returnFilter = GPUImageNormalBlendFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_POISSONBLEND:
             //            val = 0.5;
-            pFilter = [[GPUImagePoissonBlendFilter alloc] init];
-            [(GPUImagePoissonBlendFilter *)pFilter setMix:val];
-            
-            }
-            case GPUIMAGE_OPACITY:
-            {
+            returnFilter = GPUImagePoissonBlendFilter()
+            var localFilter = returnFilter as GPUImagePoissonBlendFilter
+            localFilter.mix = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_OPACITY:
             //            val = 1.0;
-            pFilter = [[GPUImageOpacityFilter alloc] init];
-            [(GPUImageOpacityFilter *)pFilter setOpacity:val];
-            
-            }
-            case GPUIMAGE_CUSTOM:
-            {
-            pFilter = [[GPUImageFilter alloc] initWithFragmentShaderFromFile:@"CustomFilter"];
-            //            pFilter = [[GPUImageFilter alloc] initWithFragmentShaderFromString:<#(NSString *)#>sShader];
-            }
-            case GPUIMAGE_KUWAHARA:
-            {
+            returnFilter = GPUImageOpacityFilter()
+            var localFilter = returnFilter as GPUImageOpacityFilter
+            localFilter.opacity = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_CUSTOM:
+            returnFilter = GPUImageFilter().initWithFragmentShaderFromFile("CustomFilter")
+//            returnFilter = GPUImageFilter().initWithFragmentShaderFromString:("sShader" as NSString)
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_KUWAHARA:
             //            val = 3.0;
-            pFilter = [[GPUImageKuwaharaFilter alloc] init];
-            [(GPUImageKuwaharaFilter *)pFilter setRadius:round(val)];
-            
-            }
-            case GPUIMAGE_KUWAHARARADIUS3:
-            {
-            pFilter = [[GPUImageKuwaharaRadius3Filter alloc] init];
-            }
-            case GPUIMAGE_VIGNETTE:
-            {
+            returnFilter = GPUImageKuwaharaFilter()
+            var localFilter = returnFilter as GPUImageKuwaharaFilter
+            localFilter.radius = uival
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_KUWAHARARADIUS3:
+            returnFilter = GPUImageKuwaharaRadius3Filter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_VIGNETTE:
             //            val = 0.75;
-            pFilter = [[GPUImageVignetteFilter alloc] init];
-            [(GPUImageVignetteFilter *)pFilter setVignetteEnd:val];
-            
-            }
-            case GPUIMAGE_GAUSSIAN:
-            {
+            returnFilter = GPUImageVignetteFilter()
+            var localFilter = returnFilter as GPUImageVignetteFilter
+            localFilter.vignetteEnd = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_GAUSSIAN:
             //            val = 2.0;
-            pFilter = [[GPUImageGaussianBlurFilter alloc] init];
-            [(GPUImageGaussianBlurFilter *)pFilter setBlurRadiusInPixels:val];
-            
-            }
-            case GPUIMAGE_BOXBLUR:
-            {
+            returnFilter = GPUImageGaussianBlurFilter()
+            var localFilter = returnFilter as GPUImageGaussianBlurFilter
+            localFilter.blurRadiusInPixels = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_BOXBLUR:
             //            val = 2.0;
-            pFilter = [[GPUImageBoxBlurFilter alloc] init];
-            [(GPUImageBoxBlurFilter *)pFilter setBlurRadiusInPixels:val];
-            
-            }
-            case GPUIMAGE_MEDIAN:
-            {
-            pFilter = [[GPUImageMedianFilter alloc] init];
-            }
-            case GPUIMAGE_MOTIONBLUR:
-            {
+            returnFilter = GPUImageBoxBlurFilter()
+            var localFilter = returnFilter as GPUImageBoxBlurFilter
+            localFilter.blurRadiusInPixels = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_MEDIAN:
+            returnFilter = GPUImageMedianFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_MOTIONBLUR:
             //            val = 0.0;
-            pFilter = [[GPUImageMotionBlurFilter alloc] init];
-            [(GPUImageMotionBlurFilter *)pFilter setBlurAngle:val];
-            
-            }
-            case GPUIMAGE_ZOOMBLUR:
-            {
+            returnFilter = GPUImageMotionBlurFilter()
+            var localFilter = returnFilter as GPUImageMotionBlurFilter
+            localFilter.blurAngle = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_ZOOMBLUR:
             //            val = 1.0;
-            pFilter = [[GPUImageZoomBlurFilter alloc] init];
-            [(GPUImageZoomBlurFilter *)pFilter setBlurSize:val];
-            
-            }
-            case GPUIMAGE_IOSBLUR:
-            {
-            pFilter = (GPUImageFilter*)[[GPUImageiOSBlurFilter alloc] init];
-            }
-            case GPUIMAGE_UIELEMENT:
-            {
-            pFilter = [[GPUImageSepiaFilter alloc] init];
-            }
-            case GPUIMAGE_GAUSSIAN_SELECTIVE:
-            {
+            returnFilter = GPUImageZoomBlurFilter()
+            var localFilter = returnFilter as GPUImageZoomBlurFilter
+            localFilter.blurSize = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_IOSBLUR:
+            returnFilter = GPUImageiOSBlurFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_UIELEMENT:
+            returnFilter = GPUImageSepiaFilter()
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_GAUSSIAN_SELECTIVE:
             //            val = 40.0/320.0;
-            pFilter = (GPUImageFilter*)[[GPUImageGaussianSelectiveBlurFilter alloc] init];
-            [(GPUImageGaussianSelectiveBlurFilter*)pFilter setExcludeCircleRadius:val];
-            }
-            case GPUIMAGE_GAUSSIAN_POSITION:
-            {
-            //            val = 40.0/320.0;
-                pFilter = [[GPUImageGaussianBlurPositionFilter alloc] init];
-                [(GPUImageGaussianBlurPositionFilter*)pFilter setBlurRadius:val];
-            }
-            case GPUIMAGE_BILATERAL:
-            {
-                //            val = 1.0;
-                pFilter = [[GPUImageBilateralFilter alloc] init];
-                [(GPUImageBilateralFilter *)pFilter setDistanceNormalizationFactor:val];
-            
-            }
-            case GPUIMAGE_FILTERGROUP:
-            {
+            returnFilter = GPUImageGaussianSelectiveBlurFilter()
+            var localFilter = returnFilter as GPUImageGaussianSelectiveBlurFilter
+            localFilter.excludeCircleRadius = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_GAUSSIAN_POSITION:
+        //            val = 40.0/320.0;
+            returnFilter = GPUImageGaussianBlurPositionFilter()
+            var localFilter = returnFilter as GPUImageGaussianBlurPositionFilter
+            localFilter.blurRadius = val
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_BILATERAL:
+            //            val = 1.0;
+            returnFilter = GPUImageBilateralFilter()
+            var localFilter = returnFilter as GPUImageBilateralFilter
+            localFilter.distanceNormalizationFactor = val
+        
+
+        case GPUImageShowcaseFilterType.GPUIMAGE_FILTERGROUP:
             //            val = 0.05;
-                pFilter = (GPUImageFilter*)[[GPUImageFilterGroup alloc] init];
-                
-                GPUImageSepiaFilter *sepiaFilter = [[GPUImageSepiaFilter alloc] init];
-                [(GPUImageSepiaFilter *)pFilter setIntensity:val];
-                [(GPUImageFilterGroup *)pFilter addFilter:sepiaFilter];
-                
-                GPUImagePixellateFilter *pixellateFilter = [[GPUImagePixellateFilter alloc] init];
-                [(GPUImagePixellateFilter *)pFilter setFractionalWidthOfAPixel:val];
-                [(GPUImageFilterGroup *)pFilter addFilter:pixellateFilter];
-                
-                [sepiaFilter addTarget:pixellateFilter];
-                [(GPUImageFilterGroup *)pFilter setInitialFilters:[NSArray arrayWithObject:sepiaFilter]];
-                [(GPUImageFilterGroup *)pFilter setTerminalFilter:pixellateFilter];
-            }
+            returnFilter = GPUImageFilterGroup()
             
-            case GPUIMAGE_FACES:
-            {
-                //            val = 1.0;
-                pFilter = [[GPUImageSaturationFilter alloc] init];
-                [(GPUImageSaturationFilter*)pFilter setSaturation:val];
-            }
-            */
-            default: pFilter = [[GPUImageSepiaFilter alloc] init]
+            var sepiaFilter = GPUImageSepiaFilter()
+            sepiaFilter.setIntensity(val)
+            localFilter.addFilter(sepiaFilter)
+            
+            var pixellateFilter = GPUImagePixellateFilter()
+            pixellateFilter.setFractionalWidthOfAPixel(val)
+            localFilter.addFilter(pixellateFilter)
+            
+            sepiaFilter.addTarget(pixellateFilter)
+            var localFilter = returnFilter as GPUImageFilterGroup
+
+            localFilter.initialFilters = NSArray(sepiaFilter)
+            localFilter.terminalFilter = pixellateFilter
+
+            
+        case GPUImageShowcaseFilterType.GPUIMAGE_FACES:
+            //            val = 1.0;
+            returnFilter = GPUImageSaturationFilter()
+            var localFilter = returnFilter as GPUImageSaturationFilter
+            localFilter.saturation = val
+
+            
+        default: returnFilter = GPUImageSepiaFilter()
+            
         }
         
-        return pFilter;
+        return returnFilter as GPUImageFilter;
     
     }
     
     func applyFilters()
     {
-        var filter1: GPUImageFilter = [self _createFilter: (GPUImageShowcaseFilterType)GPUIMAGE_ZOOMBLUR val:(Float32)1.0];
-//        GPUImageFilter *filter2 = [self _createFilter: (GPUImageShowcaseFilterType)GPUIMAGE_BULGE val:(Float32)0.5];
-//
-//        NSArray *aFilters = [NSArray arrayWithObjects:filter1, filter2, nil];
-//        //    NSArray *aFilters = [NSArray arrayWithObjects:filter1, nil];
-//        NSUInteger nFilters = [aFilters count];
-//
-//        GPUImageFilter *prevFilter = nil;
-//
-//        int i = 0;
-//        for (GPUImageFilter* currentFilter in aFilters)
-//        {
-//            if (i == 0) {
-//                [self->movieFile addTarget:currentFilter];
-//            }
-//
-//            if (i != 0 && i != nFilters-1) {
-//                [prevFilter addTarget:currentFilter];
-//            }
-//
-//            if (i != nFilters-1) {
-//                prevFilter = currentFilter;
-//            }
-//            i++;
-//        }
-//
-//        self->filter = aFilters[nFilters-1];
-//        if (i > 1) {
-//            [prevFilter addTarget:self->filter];
-//        }
+        var filter1: GPUImageFilter = self.createFilter( filterType:GPUIMAGE_ZOOMBLUR, NSDictionary(["val":1.0]))
+        var filter2: GPUImageFilter = self.createFilter( filterType:GPUIMAGE_BULGE, NSDictionary(["val":0.75]))
+        var aFilters = [GPUImageFilter] = [filter1,fitler2]
+        var nFilters = aFilters.count
+        var prevFilter : GPUImageFilter?
+        var i = 0
+        for currentFilter in aFilters
+        {
+            if (i == 0) {
+                self.movieFile.addTarget(currentFilter)
+            }
+
+            if (i != 0 && i != nFilters-1) {
+                prevFilter.addTarget(currentFilter)
+            }
+
+            if (i != nFilters-1) {
+                prevFilter = currentFilter;
+            }
+            i++;
+        }
+        self.filter = aFilters[nFilters-1];
+        if (i > 1) {
+            prevFilter.addTarget(self.filter);
+        }
+
     }
     
 

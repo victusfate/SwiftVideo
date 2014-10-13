@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B5FC57919EC7E5C00CB1523 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD3315919E73FE300594F7E /* GPUImage.framework */; };
 		9BD3312519E73F1300594F7E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD3312419E73F1300594F7E /* AppDelegate.swift */; };
 		9BD3312819E73F1300594F7E /* SwiftVideo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9BD3312619E73F1300594F7E /* SwiftVideo.xcdatamodeld */; };
 		9BD3312A19E73F1300594F7E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD3312919E73F1300594F7E /* ViewController.swift */; };
@@ -16,10 +17,16 @@
 		9BD3313E19E73F1300594F7E /* SwiftVideoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD3313D19E73F1300594F7E /* SwiftVideoTests.swift */; };
 		9BD3314E19E73F8000594F7E /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 9BD3314B19E73F8000594F7E /* LICENSE */; };
 		9BD3314F19E73F8000594F7E /* SDAVAssetExportSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BD3314D19E73F8000594F7E /* SDAVAssetExportSession.m */; };
-		9BD3315C19E73FF800594F7E /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD3315919E73FE300594F7E /* GPUImage.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9B5FC57A19EC7E6300CB1523 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9BD3315019E73FE300594F7E /* GPUImage.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = BCE209E41943F20C002FEED8;
+			remoteInfo = GPUImageFramework;
+		};
 		9BD3313819E73F1300594F7E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9BD3311719E73F1300594F7E /* Project object */;
@@ -39,13 +46,6 @@
 			containerPortal = 9BD3315019E73FE300594F7E /* GPUImage.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = BCE209E51943F20C002FEED8;
-			remoteInfo = GPUImageFramework;
-		};
-		9BD3315A19E73FF100594F7E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 9BD3315019E73FE300594F7E /* GPUImage.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = BCE209E41943F20C002FEED8;
 			remoteInfo = GPUImageFramework;
 		};
 /* End PBXContainerItemProxy section */
@@ -74,7 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9BD3315C19E73FF800594F7E /* GPUImage.framework in Frameworks */,
+				9B5FC57919EC7E5C00CB1523 /* GPUImage.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,7 +181,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				9BD3315B19E73FF100594F7E /* PBXTargetDependency */,
+				9B5FC57B19EC7E6300CB1523 /* PBXTargetDependency */,
 			);
 			name = SwiftVideo;
 			productName = SwiftVideo;
@@ -310,15 +310,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9B5FC57B19EC7E6300CB1523 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GPUImageFramework;
+			targetProxy = 9B5FC57A19EC7E6300CB1523 /* PBXContainerItemProxy */;
+		};
 		9BD3313919E73F1300594F7E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9BD3311E19E73F1300594F7E /* SwiftVideo */;
 			targetProxy = 9BD3313819E73F1300594F7E /* PBXContainerItemProxy */;
-		};
-		9BD3315B19E73FF100594F7E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GPUImageFramework;
-			targetProxy = 9BD3315A19E73FF100594F7E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
