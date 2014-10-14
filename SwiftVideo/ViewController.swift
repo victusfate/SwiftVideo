@@ -150,13 +150,13 @@ class ViewController: UIViewController {
     var filter: GPUImageOutput?
     var movieWriter: GPUImageMovieWriter?
     var mTimer: NSTimer?
-    var mBenchmarks: Array = []
+//    var mBenchmarks: Array = []
     var mSDAVAssetExportSession: SDAVAssetExportSession?
     
     
     func createFilter(  filterType:GPUImageShowcaseFilterType, params: NSDictionary ) -> GPUImageOutput
     {
-        var returnFilter: GPUImageOutput
+        var returnFilter: GPUImageOutput?
         var val = params.objectForKey("val") as CGFloat
         var uival = UInt(round(val))
         
@@ -830,9 +830,11 @@ class ViewController: UIViewController {
             
         }
         
-        return returnFilter as GPUImageFilter;
+        return returnFilter!
     
     }
+    
+    
     
     func applyFilters()
     {
