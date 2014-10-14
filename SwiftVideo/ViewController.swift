@@ -8,6 +8,8 @@
 
 import UIKit
 import GPUImage
+import MediaPlayer
+
 
 enum GPUImageShowcaseFilterType {
     case GPUIMAGE_SATURATION
@@ -136,7 +138,22 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        var session: SDAVAssetExportSession
+        
+//        var url:NSURL = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")
+//
+//        moviePlayer = MPMoviePlayerController(contentURL: url)
+//        
+//        moviePlayer.view.frame = CGRect(x: 20, y: 100, width: 200, height: 150)
+//        
+//        self.view.addSubview(moviePlayer.view)
+//        
+//        moviePlayer.fullscreen = true
+//        
+//        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
+        
+        var url:NSURL = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")
+        self.processVideo(url, size: CGSize(width: 1920,height: 1080), showOutput: true)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -145,6 +162,7 @@ class ViewController: UIViewController {
     }
     
     
+//    var moviePlayer:MPMoviePlayerController!
 
     var movieFile: GPUImageMovie?
     var filter: GPUImageOutput?
@@ -152,6 +170,9 @@ class ViewController: UIViewController {
     var mTimer: NSTimer?
 //    var mBenchmarks: Array = []
     var mSDAVAssetExportSession: SDAVAssetExportSession?
+    
+    @IBOutlet var oProgressLabel: UILabel?
+    @IBOutlet var oProgressTimeLabel: UILabel?
     
     
     func createFilter(  filterType:GPUImageShowcaseFilterType, params: NSDictionary ) -> GPUImageOutput
@@ -864,6 +885,104 @@ class ViewController: UIViewController {
             prevFilter?.addTarget(self.filter as GPUImageInput);
         }
 
+    }
+ /*
+    func getTimerElapsedTime( timer: NSTimer) -> String
+    {
+        var aTimeInterval = NSDate().timeIntervalSinceDate( self.mTimer?.userInfo as NSDate)
+        return String(format: "%0.2f" as String, aTimeInterval)
+    }
+
+    func retrievingProgress( timer: NSTimer )
+    {
+        var aProgress = 0.0 as Float
+        if self.movieFile != nil {
+            aProgress = self.movieFile!.progress
+        }
+        else if self.mSDAVAssetExportSession != nil {
+            aProgress = self.mSDAVAssetExportSession!.progress
+        }
+        var iProgress = UInt(round(aProgress * 100))
+        var theText = String(format: "a float number: %d%%" as String, iProgress as CVarArgType)
+        self.oProgressLabel?.text = theText
+        self.oProgressTimeLabel?.text = getTimerElapsedTime(timer)
+    }
+    
+    func startTimer()
+    {
+        self.mTimer = NSTimer(timeInterval: 0.3, target: self, selector:  Selector("retrievingProgress"), userInfo: NSDate(), repeats: true)
+    }
+*/
+    
+    func getOutputPath() -> String
+    {
+        return NSHomeDirectory().stringByAppendingPathComponent("Documents/Movie.mov")
+    }
+    
+    func getOutputURL() -> NSURL
+    {
+        var pathToMovie = getOutputPath();
+        unlink(pathToMovie) // delete existing file
+        return NSURL(fileURLWithPath: pathToMovie)
+    }
+    
+    func processVideo( fileURL: NSURL, size: CGSize, showOutput: Bool)
+    {
+        self.movieFile = GPUImageMovie(URL: fileURL)
+        
+        self.movieFile?.runBenchmark = false
+        self.movieFile?.playAtActualSpeed = false;
+        
+        self.applyFilters()
+        
+        // show the video for display in case needed
+        if (showOutput)
+        {
+            var filterView = self.view as GPUImageView
+            self.filter?.addTarget(filterView as GPUImageInput)
+        }
+        
+        // lets create a movieWriter
+        self.movieWriter = GPUImageMovieWriter(movieURL: self.getOutputURL(), size: size)
+        self.filter?.addTarget(self.movieWriter as GPUImageInput)
+        
+        // Configure this for video from the movie file, where we want to
+        // preserve all video frames and audio samples
+        self.movieWriter?.shouldPassthroughAudio = true
+        self.movieFile?.audioEncodingTarget = movieWriter
+        self.movieFile?.enableSynchronizedEncodingUsingMovieWriter(movieWriter)
+        
+        self.movieWriter?.startRecording()
+        self.movieFile?.startProcessing()
+        
+//        self.startTimer()
+        
+
+//        __weak typeof(self) wSelf = self;
+        
+        // Completion handler
+        self.movieWriter?.completionBlock = {
+
+//        typeof(self) sSelf = wSelf;
+//            
+//        [sSelf->filter removeTarget:sSelf->movieWriter];
+//        [sSelf->movieWriter finishRecording];
+//        
+//        dispatch_async(dispatch_get_main_queue(), {
+//        
+//            NSLog(@"GPUPImage + OpenGL Filter: %@ output: %dp showOutput: %@ elasped time: %@s file size: %@",
+//            filename, (int)size.height, printBool(showOutput), getTimerElapsedTime(sSelf->mTimer),
+//            outputFileSize());
+//            [sSelf->mTimer invalidate];
+//            sSelf.oProgressLabel.text = @"Done";
+//            
+//            // cleanup
+//            sSelf->movieFile = nil;
+//            sSelf->movieWriter = nil;
+//            sSelf->mTimer = nil;
+//            sSelf->filter = nil;
+//            [sSelf _runNextBenchmark];
+        }
     }
     
 
