@@ -632,10 +632,10 @@ class ViewController: UIViewController {
             returnFilter = GPUImageMosaicFilter()
             var localFilter = returnFilter as GPUImageMosaicFilter
             localFilter.displayTileSize = CGSizeMake(val,val)
-            localFilter.setTileSet("squares.png")
-            localFilter.setColorOn(false)
-            localFilter.setTileSet("dotletterstiles.png")
-            localFilter.setTileSet("curvies.png")
+            localFilter.tileSet = "squares.png"
+            localFilter.colorOn = false
+//            localFilter.tileSet = "dotletterstiles.png"
+//            localFilter.tileSet = "curvies.png"
             
         case GPUImageShowcaseFilterType.GPUIMAGE_CHROMAKEY:
             //            val = 0.4;
@@ -648,7 +648,7 @@ class ViewController: UIViewController {
             //            val = 0.4;
             returnFilter = GPUImageChromaKeyFilter()
             var localFilter = returnFilter as GPUImageChromaKeyFilter
-            localFilter.colorToReplace = [red:0.0, green:1.0, blue:0.0];
+            localFilter.setColorToReplaceRed(0.0, green: 1.0, blue: 0.0)
             localFilter.thresholdSensitivity = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_ADD:
@@ -730,8 +730,8 @@ class ViewController: UIViewController {
             localFilter.opacity = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CUSTOM:
-            returnFilter = GPUImageFilter().initWithFragmentShaderFromFile("CustomFilter")
-//            returnFilter = GPUImageFilter().initWithFragmentShaderFromString:("sShader" as NSString)
+            returnFilter = GPUImageFilter(fragmentShaderFromFile: "CustomFilter");
+//            returnFilter = GPUImageFilter(fragmentShaderFromString: "sShader" as NSString);
 
         case GPUImageShowcaseFilterType.GPUIMAGE_KUWAHARA:
             //            val = 3.0;
@@ -803,19 +803,19 @@ class ViewController: UIViewController {
         case GPUImageShowcaseFilterType.GPUIMAGE_FILTERGROUP:
             //            val = 0.05;
             returnFilter = GPUImageFilterGroup()
+            var localFilter = returnFilter as GPUImageFilterGroup
             
             var sepiaFilter = GPUImageSepiaFilter()
-            sepiaFilter.setIntensity(val)
+            sepiaFilter.intensity = val
             localFilter.addFilter(sepiaFilter)
             
             var pixellateFilter = GPUImagePixellateFilter()
-            pixellateFilter.setFractionalWidthOfAPixel(val)
+            pixellateFilter.fractionalWidthOfAPixel = val
             localFilter.addFilter(pixellateFilter)
             
             sepiaFilter.addTarget(pixellateFilter)
-            var localFilter = returnFilter as GPUImageFilterGroup
 
-            localFilter.initialFilters = NSArray(sepiaFilter)
+            localFilter.initialFilters = NSArray(array: [sepiaFilter])
             localFilter.terminalFilter = pixellateFilter
 
             
@@ -836,20 +836,20 @@ class ViewController: UIViewController {
     
     func applyFilters()
     {
-        var filter1: GPUImageFilter = self.createFilter( filterType:GPUIMAGE_ZOOMBLUR, NSDictionary(["val":1.0]))
-        var filter2: GPUImageFilter = self.createFilter( filterType:GPUIMAGE_BULGE, NSDictionary(["val":0.75]))
-        var aFilters = [GPUImageFilter] = [filter1,fitler2]
+        var filter1: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_ZOOMBLUR, params: NSDictionary(dictionary: ["val":1.0]))
+        var filter2: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_BULGE, params: NSDictionary(dictionary:["val":0.75]))
+        var aFilters: [GPUImageOutput] = [filter1,filter2]
         var nFilters = aFilters.count
-        var prevFilter : GPUImageFilter?
+        var prevFilter : GPUImageOutput?
         var i = 0
         for currentFilter in aFilters
         {
             if (i == 0) {
-                self.movieFile.addTarget(currentFilter)
+                self.movieFile?.addTarget(currentFilter as GPUImageInput)
             }
 
             if (i != 0 && i != nFilters-1) {
-                prevFilter.addTarget(currentFilter)
+                prevFilter?.addTarget(currentFilter as GPUImageInput)
             }
 
             if (i != nFilters-1) {
@@ -859,7 +859,7 @@ class ViewController: UIViewController {
         }
         self.filter = aFilters[nFilters-1];
         if (i > 1) {
-            prevFilter.addTarget(self.filter);
+            prevFilter?.addTarget(self.filter as GPUImageInput);
         }
 
     }
