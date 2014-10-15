@@ -1010,8 +1010,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         
         // Completion handler
         self.movieWriter?.completionBlock = {
-            NSLog("GPUPImage + OpenGL Filter: %output: %dp showOutput: %@ elasped time: %@s file size: %@",
-                        size.height, showOutput, self.getTimerElapsedTime(self.mTimer!), self.outputFileSize())
+//            NSLog("GPUPImage + OpenGL Filter: %output: %dp showOutput: %@ elasped time: %@s file size: %@",
+//                        size.height, showOutput, self.getTimerElapsedTime(self.mTimer!), self.outputFileSize())
             
             
 //        typeof(self) sSelf = wSelf;
