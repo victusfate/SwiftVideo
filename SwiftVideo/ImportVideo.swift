@@ -5,7 +5,7 @@
 //  Created by messel on 10/14/14.
 //  Copyright (c) 2014 messel. All rights reserved.
 //
-/*
+
 import UIKit
 import MobileCoreServices
 
@@ -51,4 +51,3 @@ class SecondViewController: UIViewController,UINavigationControllerDelegate, UII
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
-*/

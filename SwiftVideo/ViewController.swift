@@ -886,7 +886,7 @@ class ViewController: UIViewController {
         }
 
     }
- /*
+ 
     func getTimerElapsedTime( timer: NSTimer) -> String
     {
         var aTimeInterval = NSDate().timeIntervalSinceDate( self.mTimer?.userInfo as NSDate)
@@ -912,7 +912,7 @@ class ViewController: UIViewController {
     {
         self.mTimer = NSTimer(timeInterval: 0.3, target: self, selector:  Selector("retrievingProgress"), userInfo: NSDate(), repeats: true)
     }
-*/
+
     
     func getOutputPath() -> String
     {
@@ -926,9 +926,33 @@ class ViewController: UIViewController {
         return NSURL(fileURLWithPath: pathToMovie)
     }
     
+    // Returns a display string of the output file size ex. 234MB
+    func outputFileSize() -> String
+    {
+        var pathToMovie = getOutputPath();
+        var anAttributesError : NSError?
+        var oError : NSError? = nil
+//        var aFileAttributes : NSObject = NSFileManager().attributesOfItemAtPath(path: pathToMovie, error: error)
+
+        let manager = NSFileManager.defaultManager()
+        var aFileAttributes = NSDictionary(dictionary: manager.attributesOfItemAtPath( pathToMovie, error : &oError)!)
+    
+        if (aFileAttributes.count > 0)
+        {
+            var aFileSizeString = aFileAttributes.objectForKey(NSFileSize) as String
+    
+            // Use the build in formatter to give things back like 243MB etc
+            return aFileSizeString
+        }
+        else
+        {
+            return String("0 MB")
+        }
+    }
+    
     func processVideo( fileURL: NSURL, size: CGSize, showOutput: Bool)
     {
-        self.movieFile = GPUImageMovie(URL: fileURL)
+        self.movieFile = GPUImageMovie(URL: fileURL as NSURL)
         
         self.movieFile?.runBenchmark = false
         self.movieFile?.playAtActualSpeed = false;
@@ -938,8 +962,7 @@ class ViewController: UIViewController {
         // show the video for display in case needed
         if (showOutput)
         {
-            var filterView = self.view as GPUImageView
-            self.filter?.addTarget(filterView as GPUImageInput)
+            self.filter?.addTarget(self.view as GPUImageView)
         }
         
         // lets create a movieWriter
@@ -962,13 +985,16 @@ class ViewController: UIViewController {
         
         // Completion handler
         self.movieWriter?.completionBlock = {
-
+            NSLog("GPUPImage + OpenGL Filter: %output: %dp showOutput: %@ elasped time: %@s file size: %@",
+                        size.height, showOutput, self.getTimerElapsedTime(self.mTimer!), self.outputFileSize())
+            
+            
 //        typeof(self) sSelf = wSelf;
 //            
 //        [sSelf->filter removeTarget:sSelf->movieWriter];
 //        [sSelf->movieWriter finishRecording];
 //        
-//        dispatch_async(dispatch_get_main_queue(), {
+//            dispatch_async(dispatch_get_main_queue(), {
 //        
 //            NSLog(@"GPUPImage + OpenGL Filter: %@ output: %dp showOutput: %@ elasped time: %@s file size: %@",
 //            filename, (int)size.height, printBool(showOutput), getTimerElapsedTime(sSelf->mTimer),
@@ -982,6 +1008,7 @@ class ViewController: UIViewController {
 //            sSelf->mTimer = nil;
 //            sSelf->filter = nil;
 //            [sSelf _runNextBenchmark];
+//            }
         }
     }
     
