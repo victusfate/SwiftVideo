@@ -10,7 +10,7 @@ import UIKit
 import MobileCoreServices
 
 class SecondViewController: UIViewController,UINavigationControllerDelegate, UIImagePickerControllerDelegate {
-    
+        
     @IBOutlet var img:UIImageView!=nil
     
     override func viewDidLoad() {
@@ -23,8 +23,6 @@ class SecondViewController: UIViewController,UINavigationControllerDelegate, UII
         super.didReceiveMemoryWarning()
         
     }
-    
-    
     
     
     @IBAction func buttonTapped(AnyObject)
@@ -44,7 +42,7 @@ class SecondViewController: UIViewController,UINavigationControllerDelegate, UII
         }
     }
     
-    func videoPickerController(picker: UIImagePickerController!, didFinishPickingVideo image: UIImage!, editingInfo: NSDictionary!) {
+    func imagePickerController(picker: UIImagePickerController!, didFinishPickingVideo image: UIImage!, editingInfo: NSDictionary!) {
         let selectedImage : UIImage = image
         //var tempImage:UIImage = editingInfo[UIImagePickerControllerOriginalImage] as UIImage
         img.image=selectedImage

@@ -8,6 +8,8 @@
 
 import UIKit
 import GPUImage
+import MobileCoreServices
+
 import MediaPlayer
 
 
@@ -133,7 +135,7 @@ enum GPUImageShowcaseFilterType {
     case GPUIMAGE_NUMFILTERS
 }
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -151,8 +153,8 @@ class ViewController: UIViewController {
 //        
 //        moviePlayer.controlStyle = MPMovieControlStyle.Embedded
         
-        var url:NSURL = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")
-        self.processVideo(url, size: CGSize(width: 1920,height: 1080), showOutput: true)
+//        var url:NSURL = NSURL(string: "http://jplayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v")
+//        self.processVideo(url, size: CGSize(width: 1920,height: 1080), showOutput: true)
         
     }
 
@@ -173,7 +175,30 @@ class ViewController: UIViewController {
     
     @IBOutlet var oProgressLabel: UILabel?
     @IBOutlet var oProgressTimeLabel: UILabel?
+
     
+    @IBAction func loadVideo(sender : AnyObject) {
+//        let pickerC = UIImagePickerController()
+//        pickerC.delegate = self
+//        self.presentViewController(pickerC, animated: true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary){
+                println("Button capture")
+    
+                var pickerController = UIImagePickerController()
+                pickerController.delegate = self
+                pickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+                pickerController.mediaTypes = [kUTTypeMovie as AnyObject]
+                pickerController.allowsEditing = false
+    
+                self.presentViewController(pickerController, animated: true, completion: nil)
+            }
+    }
+    
+    func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!)
+    {
+            self.dismissViewControllerAnimated(true, completion: nil)
+            self.processVideo(info[UIImagePickerControllerMediaURL] as NSURL, size: CGSize(width: 1920,height: 1080), showOutput: true)
+    }
     
     func createFilter(  filterType:GPUImageShowcaseFilterType, params: NSDictionary ) -> GPUImageOutput
     {
@@ -1014,4 +1039,6 @@ class ViewController: UIViewController {
     
 
 }
+
+
 
