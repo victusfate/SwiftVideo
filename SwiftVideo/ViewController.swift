@@ -177,17 +177,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     
     @IBAction func loadVideo(sender : AnyObject) {
-//        let pickerC = UIImagePickerController()
-//        pickerC.delegate = self
-//        self.presentViewController(pickerC, animated: true, completion: nil)
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary){
-                println("Button capture")
     
                 var pickerController = UIImagePickerController()
                 pickerController.delegate = self
                 pickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
                 pickerController.mediaTypes = [kUTTypeMovie as AnyObject]
                 pickerController.allowsEditing = false
+                pickerController.videoQuality = UIImagePickerControllerQualityType.TypeHigh
     
                 self.presentViewController(pickerController, animated: true, completion: nil)
             }
