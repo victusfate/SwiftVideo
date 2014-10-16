@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9B0882B819EDBAF300126277 /* ImportVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0882B719EDBAF300126277 /* ImportVideo.swift */; };
 		9B17E2A219EEB6FE004E2D05 /* GPUImage.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9BD3315919E73FE300594F7E /* GPUImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9B5FC57919EC7E5C00CB1523 /* GPUImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD3315919E73FE300594F7E /* GPUImage.framework */; };
 		9BD3312519E73F1300594F7E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD3312419E73F1300594F7E /* AppDelegate.swift */; };
@@ -66,7 +65,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		9B0882B719EDBAF300126277 /* ImportVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImportVideo.swift; sourceTree = "<group>"; };
 		9BD3311F19E73F1300594F7E /* SwiftVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BD3312319E73F1300594F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9BD3312419E73F1300594F7E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -130,7 +128,6 @@
 			children = (
 				9BD3312419E73F1300594F7E /* AppDelegate.swift */,
 				9BD3312919E73F1300594F7E /* ViewController.swift */,
-				9B0882B719EDBAF300126277 /* ImportVideo.swift */,
 				9BD3312B19E73F1300594F7E /* Main.storyboard */,
 				9BD3312E19E73F1300594F7E /* Images.xcassets */,
 				9BD3313019E73F1300594F7E /* LaunchScreen.xib */,
@@ -314,7 +311,6 @@
 				9BD3312519E73F1300594F7E /* AppDelegate.swift in Sources */,
 				9BD3312819E73F1300594F7E /* SwiftVideo.xcdatamodeld in Sources */,
 				9BD3314F19E73F8000594F7E /* SDAVAssetExportSession.m in Sources */,
-				9B0882B819EDBAF300126277 /* ImportVideo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -170,7 +170,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     var filter: GPUImageOutput?
     var movieWriter: GPUImageMovieWriter?
     var mTimer: NSTimer?
-//    var mBenchmarks: Array = []
     var mSDAVAssetExportSession: SDAVAssetExportSession?
     
     @IBOutlet var oProgressLabel: UILabel?
@@ -918,7 +917,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return String(format: "%0.2f" as String, aTimeInterval)
     }
 
-    func retrievingProgress( timer: NSTimer )
+    func retrievingProgress()
     {
         var aProgress = 0.0 as Float
         if self.movieFile != nil {
@@ -928,14 +927,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             aProgress = self.mSDAVAssetExportSession!.progress
         }
         var iProgress = UInt(round(aProgress * 100))
-        var theText = String(format: "a float number: %d%%" as String, iProgress as CVarArgType)
+        var theText = String(format: "%d%%" as String, iProgress as CVarArgType)
         self.oProgressLabel?.text = theText
-        self.oProgressTimeLabel?.text = getTimerElapsedTime(timer)
+        self.oProgressTimeLabel?.text = self.getTimerElapsedTime(self.mTimer!)
     }
     
     func startTimer()
     {
-        self.mTimer = NSTimer(timeInterval: 0.3, target: self, selector:  Selector("retrievingProgress"), userInfo: NSDate(), repeats: true)
+        self.mTimer = NSTimer.scheduledTimerWithTimeInterval(0.3, target: self, selector:  "retrievingProgress", userInfo: NSDate(), repeats: true)
     }
 
     
@@ -964,15 +963,38 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
         if (aFileAttributes.count > 0)
         {
-            var aFileSizeString = aFileAttributes.objectForKey(NSFileSize) as String
+            var aFileSizeString = aFileAttributes.objectForKey(NSFileSize) as Int
     
-            // Use the build in formatter to give things back like 243MB etc
-            return aFileSizeString
+            return String(aFileSizeString)
         }
         else
         {
-            return String("0 MB")
+            return String(0)
         }
+    }
+    
+   
+    // this method was never getting called
+    func videoSaved(videoSaved: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>)       {
+        
+        if error != nil {
+            println("videoSaved: \(error)")
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.mTimer?.invalidate()
+
+            self.oProgressLabel?.text = "0%"
+            self.oProgressTimeLabel?.text = "0"
+            
+            //                self.oProgressLabel.text = "Done";
+            
+            // cleanup
+            self.movieFile = nil;
+            self.movieWriter = nil;
+            self.mTimer = nil;
+            self.filter = nil;
+        })
     }
     
     func processVideo( fileURL: NSURL, size: CGSize, showOutput: Bool)
@@ -1003,37 +1025,29 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         self.movieWriter?.startRecording()
         self.movieFile?.startProcessing()
         
-//        self.startTimer()
+        self.startTimer()
         
 
 //        __weak typeof(self) wSelf = self;
         
         // Completion handler
+//        self.movieWriter?.completionBlock = {[weak self] in
         self.movieWriter?.completionBlock = {
-//            NSLog("GPUPImage + OpenGL Filter: %output: %dp showOutput: %@ elasped time: %@s file size: %@",
-//                        size.height, showOutput, self.getTimerElapsedTime(self.mTimer!), self.outputFileSize())
+
             
+            var elapsedTime = self.getTimerElapsedTime(self.mTimer!)
+            println("GPUPImage + OpenGL output height: \(size.height) showOutput: \(showOutput) elasped time: \(elapsedTime)s file size: \(self.outputFileSize()) bytes")
             
-//        typeof(self) sSelf = wSelf;
-//            
-//        [sSelf->filter removeTarget:sSelf->movieWriter];
-//        [sSelf->movieWriter finishRecording];
-//        
-//            dispatch_async(dispatch_get_main_queue(), {
-//        
-//            NSLog(@"GPUPImage + OpenGL Filter: %@ output: %dp showOutput: %@ elasped time: %@s file size: %@",
-//            filename, (int)size.height, printBool(showOutput), getTimerElapsedTime(sSelf->mTimer),
-//            outputFileSize());
-//            [sSelf->mTimer invalidate];
-//            sSelf.oProgressLabel.text = @"Done";
-//            
-//            // cleanup
-//            sSelf->movieFile = nil;
-//            sSelf->movieWriter = nil;
-//            sSelf->mTimer = nil;
-//            sSelf->filter = nil;
-//            [sSelf _runNextBenchmark];
-//            }
+            self.filter?.removeTarget(self.movieWriter as GPUImageInput)
+            self.movieWriter?.finishRecording()
+            
+//            var wSelf = [weak self]
+
+            if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(self.getOutputPath())) {
+                UISaveVideoAtPathToSavedPhotosAlbum(self.getOutputPath(), self,  "videoSaved:didFinishSavingWithError:contextInfo:", nil)
+//                UISaveVideoAtPathToSavedPhotosAlbum(self.getOutputPath(), self,  nil, nil)
+            }
+           
         }
     }
     
