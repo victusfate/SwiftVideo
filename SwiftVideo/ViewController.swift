@@ -184,6 +184,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 pickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
                 pickerController.mediaTypes = [kUTTypeMovie as AnyObject]
                 pickerController.allowsEditing = false
+                // still see a compressing video step, the goal is loading raw video
                 pickerController.videoQuality = UIImagePickerControllerQualityType.TypeHigh
     
                 self.presentViewController(pickerController, animated: true, completion: nil)
@@ -971,7 +972,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
    
-    // this method was never getting called
+    // done writing video callback
     func videoSaved(videoSaved: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafePointer<Void>)       {
         
         if error != nil {
