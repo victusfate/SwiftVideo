@@ -1017,6 +1017,62 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         
         // lets create a movieWriter
+        // Setup AverageBitRate, FrameInterval, and ProfileLevel (Compression Properties)
+
+        /*
+        NSDictionary *videoCleanApertureSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSNumber numberWithInt:videoSize.width], AVVideoCleanApertureWidthKey,
+        [NSNumber numberWithInt:videoSize.height], AVVideoCleanApertureHeightKey,
+        [NSNumber numberWithInt:0], AVVideoCleanApertureHorizontalOffsetKey,
+        [NSNumber numberWithInt:0], AVVideoCleanApertureVerticalOffsetKey,
+        nil];
+        
+        NSDictionary *videoAspectRatioSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+        [NSNumber numberWithInt:3], AVVideoPixelAspectRatioHorizontalSpacingKey,
+        [NSNumber numberWithInt:3], AVVideoPixelAspectRatioVerticalSpacingKey,
+        nil];
+        
+        NSMutableDictionary * compressionProperties = [[NSMutableDictionary alloc] init];
+        [compressionProperties setObject:videoCleanApertureSettings forKey:AVVideoCleanApertureKey];
+        [compressionProperties setObject:videoAspectRatioSettings forKey:AVVideoPixelAspectRatioKey];
+        [compressionProperties setObject:[NSNumber numberWithInt: 2000000] forKey:AVVideoAverageBitRateKey];
+        [compressionProperties setObject:[NSNumber numberWithInt: 16] forKey:AVVideoMaxKeyFrameIntervalKey];
+        [compressionProperties setObject:AVVideoProfileLevelH264Main31 forKey:AVVideoProfileLevelKey];
+        
+        [outputSettings setObject:compressionProperties forKey:AVVideoCompressionPropertiesKey];
+        */
+        var videoCleanApertureSettings = NSDictionary(dictionary: [
+            "AVVideoCleanApertureWidthKey": size.width,
+            "AVVideoCleanApertureHeightKey": size.height,
+            "AVVideoCleanApertureHorizontalOffsetKey": 0,
+            "AVVideoCleanApertureVerticalOffsetKey": 0
+            ])
+        
+        var videoAspectRatioSettings = NSDictionary(dictionary: [
+            "AVVideoPixelAspectRatioHorizontalSpacingKey": 3,
+            "AVVideoPixelAspectRatioVerticalSpacingKey": 3
+            ])
+        
+        var compressionProperties = NSDictionary(dictionary: [
+            "AVVideoCleanApertureKey": videoCleanApertureSettings,
+            "AVVideoPixelAspectRatioKey": videoAspectRatioSettings,
+            "AVVideoAverageBitRateKey":17000000,
+            "AVVideoMaxKeyFrameIntervalKey": 16,
+            "AVVideoProfileLevelKey": AVVideoProfileLevelH264Main41
+            ])
+        
+        var oOutputSettings = NSDictionary(dictionary: [
+            "AVVideoCodecKey":AVVideoCodecH264,
+            "AVVideoWidthKey": size.width,
+            "AVVideoHeightKey": size.height,
+            "AVVideoCompressionPropertiesKey": compressionProperties
+            ])
+        
+        // fileType: AVFileTypeQuickTimeMovie, AVFileTypeAppleM4A,AVFileTypeAppleM4V, AVFileTypeMPEG4
+        // [AVAssetWriterInput initWithMediaType:outputSettings:sourceFormatHint:] 
+        //   Compression property AVVideoAverageBitRateKey is not supported for video codec type avc1'
+//        self.movieWriter = GPUImageMovieWriter(movieURL: self.getOutputURL(), size: size, fileType: AVFileTypeQuickTimeMovie, outputSettings: oOutputSettings)
+
         self.movieWriter = GPUImageMovieWriter(movieURL: self.getOutputURL(), size: size)
         self.filter?.addTarget(self.movieWriter as GPUImageInput)
         
