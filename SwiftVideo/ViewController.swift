@@ -175,7 +175,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet var oProgressLabel: UILabel?
     @IBOutlet var oProgressTimeLabel: UILabel?
 
-    
+
+    // quick uiimagepickercontroller to import a vid from library
     @IBAction func loadVideo(sender : AnyObject) {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.PhotoLibrary){
     
@@ -184,13 +185,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 pickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
                 pickerController.mediaTypes = [kUTTypeMovie as AnyObject]
                 pickerController.allowsEditing = false
-                // still see a compressing video step, the goal is loading raw video
+                // still see a compressing video step, the goal is loading raw video, is typehigh good enough?
                 pickerController.videoQuality = UIImagePickerControllerQualityType.TypeHigh
     
                 self.presentViewController(pickerController, animated: true, completion: nil)
             }
     }
-    
+    // done picking video callback
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!)
     {
             self.dismissViewControllerAnimated(true, completion: nil)
