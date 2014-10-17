@@ -882,9 +882,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func applyFilters()
     {
+        // placeholder for interactive filter selection
         var filter1: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_ZOOMBLUR, params: NSDictionary(dictionary: ["val":1.0]))
         var filter2: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_BULGE, params: NSDictionary(dictionary:["val":0.75]))
         var aFilters: [GPUImageOutput] = [filter1,filter2]
+        
+        // arbitrary filter application
         var nFilters = aFilters.count
         var prevFilter : GPUImageOutput?
         var i = 0
@@ -910,6 +913,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
     }
  
+    // handy progress/timer from Marc's VideoBench
     func getTimerElapsedTime( timer: NSTimer) -> String
     {
         var aTimeInterval = NSDate().timeIntervalSinceDate( self.mTimer?.userInfo as NSDate)
@@ -996,6 +1000,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         })
     }
     
+    // actually process selected video
     func processVideo( fileURL: NSURL, size: CGSize, showOutput: Bool)
     {
         self.movieFile = GPUImageMovie(URL: fileURL as NSURL)
@@ -1030,6 +1035,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //        __weak typeof(self) wSelf = self;
         
         // Completion handler
+        // didn't seem to need the weak self stuff, not 100% clear on it
 //        self.movieWriter?.completionBlock = {[weak self] in
         self.movieWriter?.completionBlock = {
 
