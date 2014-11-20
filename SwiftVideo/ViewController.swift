@@ -185,6 +185,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 pickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
                 pickerController.mediaTypes = [kUTTypeMovie as AnyObject]
                 pickerController.allowsEditing = false
+
+                // example from how Chris got videos to import without an export
+//                let imageManager = PHImageManager.defaultManager()
+//                
+//                let videoRequestOptions = PHVideoRequestOptions()
+//                videoRequestOptions.deliveryMode = .HighQualityFormat
+//                videoRequestOptions.version = .Current
+//                videoRequestOptions.networkAccessAllowed = false
+//                imageManager.requestAVAssetForVideo(nextAsset, options: videoRequestOptions, resultHandler: { (avAsset: AVAsset!, avAudioMix: AVAudioMix!, [NSObject : AnyObject]!) -> Void in
+            
+
                 // still see a compressing video step, the goal is loading raw video, is typehigh good enough?
                 pickerController.videoQuality = UIImagePickerControllerQualityType.TypeHigh
     
@@ -950,7 +961,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     {
         var pathToMovie = getOutputPath();
         unlink(pathToMovie) // delete existing file
-        return NSURL(fileURLWithPath: pathToMovie)
+        return NSURL(fileURLWithPath: pathToMovie)!
     }
     
     // Returns a display string of the output file size ex. 234MB
