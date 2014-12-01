@@ -186,6 +186,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
                 pickerController.mediaTypes = [kUTTypeMovie as AnyObject]
                 pickerController.allowsEditing = false
 
+
                 // example from how Chris got videos to import without an export
 //                let imageManager = PHImageManager.defaultManager()
 //                
