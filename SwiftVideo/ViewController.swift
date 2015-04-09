@@ -198,22 +198,24 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
 
                 // still see a compressing video step, the goal is loading raw video, is typehigh good enough?
-                pickerController.videoQuality = UIImagePickerControllerQualityType.TypeHigh
+                pickerController.videoQuality = UIImagePickerControllerQualityType.TypeHigh as UIImagePickerControllerQualityType // UIImagePickerControllerQualityType.TypeHigh
     
                 self.presentViewController(pickerController, animated: true, completion: nil)
             }
     }
     // done picking video callback
-    func imagePickerController(picker: UIImagePickerController!, didFinishPickingMediaWithInfo info: NSDictionary!)
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject: AnyObject])
     {
             self.dismissViewControllerAnimated(true, completion: nil)
-            self.processVideo(info[UIImagePickerControllerMediaURL] as NSURL, size: CGSize(width: 1920,height: 1080), showOutput: true)
+            let url = info[UIImagePickerControllerMediaURL] as! NSURL
+            println(url)
+            self.processVideo(info[UIImagePickerControllerMediaURL] as! NSURL, size: CGSize(width: 1920,height: 1080), showOutput: true)
     }
     
     func createFilter(  filterType:GPUImageShowcaseFilterType, params: NSDictionary ) -> GPUImageOutput
     {
         var returnFilter: GPUImageOutput?
-        var val = params.objectForKey("val") as CGFloat
+        var val = params.objectForKey("val") as! CGFloat
         var uival = UInt(round(val))
         
         switch filterType {
@@ -221,43 +223,43 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_SEPIA:
         //             val = 1.0
             returnFilter = GPUImageSepiaFilter()
-            var localFilter = returnFilter as GPUImageSepiaFilter
+            var localFilter = returnFilter as! GPUImageSepiaFilter
             localFilter.intensity = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_PIXELLATE:
         //             val = 0.05;
             returnFilter = GPUImagePixellateFilter();
-            var localFilter = returnFilter as  GPUImagePixellateFilter
+            var localFilter = returnFilter as!  GPUImagePixellateFilter
             localFilter.fractionalWidthOfAPixel = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_POLARPIXELLATE:
         //            val = 0.05;
             returnFilter = GPUImagePolarPixellateFilter()
-            var localFilter = returnFilter as  GPUImagePolarPixellateFilter
+            var localFilter = returnFilter as!  GPUImagePolarPixellateFilter
             localFilter.pixelSize = CGSizeMake(val,val)
 
         case GPUImageShowcaseFilterType.GPUIMAGE_PIXELLATE_POSITION:
         //            val = 0.25;
             returnFilter = GPUImagePixellatePositionFilter()
-            var localFilter = returnFilter as  GPUImagePixellatePositionFilter
+            var localFilter = returnFilter as!  GPUImagePixellatePositionFilter
             localFilter.radius = val
             
         case GPUImageShowcaseFilterType.GPUIMAGE_POLKADOT:
         //            val = 0.05;
             returnFilter = GPUImagePolkaDotFilter()
-            var localFilter = returnFilter as  GPUImagePolkaDotFilter
+            var localFilter = returnFilter as!  GPUImagePolkaDotFilter
             localFilter.fractionalWidthOfAPixel = val
             
         case GPUImageShowcaseFilterType.GPUIMAGE_HALFTONE:
         //            val = 0.01;
             returnFilter = GPUImageHalftoneFilter()
-            var localFilter = returnFilter as  GPUImageHalftoneFilter
+            var localFilter = returnFilter as!  GPUImageHalftoneFilter
             localFilter.fractionalWidthOfAPixel = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CROSSHATCH:
         //            val = 0.01;
             returnFilter = GPUImageCrosshatchFilter()
-            var localFilter = returnFilter as  GPUImageCrosshatchFilter
+            var localFilter = returnFilter as!  GPUImageCrosshatchFilter
             localFilter.crossHatchSpacing = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_COLORINVERT:
@@ -269,7 +271,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_MONOCHROME:
         //            val = 1.0;
             returnFilter = GPUImageMonochromeFilter()
-            var localFilter = returnFilter as GPUImageMonochromeFilter
+            var localFilter = returnFilter as! GPUImageMonochromeFilter
             localFilter.color = GPUVector4(one:0.0, two:0.0, three:1.0, four:1.0)
             localFilter.intensity = val
             
@@ -288,25 +290,25 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_SATURATION:
             //            val = 1.0;
             returnFilter = GPUImageSaturationFilter()
-            var localFilter = returnFilter as GPUImageSaturationFilter
+            var localFilter = returnFilter as! GPUImageSaturationFilter
             localFilter.saturation = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CONTRAST:
             //            val = 1.0;
             returnFilter = GPUImageContrastFilter()
-            var localFilter = returnFilter as GPUImageContrastFilter
+            var localFilter = returnFilter as! GPUImageContrastFilter
             localFilter.contrast = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_BRIGHTNESS:
             //            val = 0.2;
             returnFilter = GPUImageBrightnessFilter()
-            var localFilter = returnFilter as GPUImageBrightnessFilter
+            var localFilter = returnFilter as! GPUImageBrightnessFilter
             localFilter.brightness = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_LEVELS:
             //            val = 0.2;
             returnFilter = GPUImageLevelsFilter()
-            var localFilter = returnFilter as GPUImageLevelsFilter
+            var localFilter = returnFilter as! GPUImageLevelsFilter
 
             localFilter.setRedMin(val, gamma:1.0, max:1.0, minOut:0.0, maxOut:1.0)
             localFilter.setGreenMin(val, gamma:1.0, max:1.0, minOut:0.0, maxOut:1.0)
@@ -315,7 +317,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_RGB:
             //            val = 1.0;
             returnFilter = GPUImageRGBFilter()
-            var localFilter = returnFilter as GPUImageRGBFilter
+            var localFilter = returnFilter as! GPUImageRGBFilter
 
             localFilter.red = val
             //            localFilter.green = val
@@ -324,37 +326,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_HUE:
             //            val = 90.0;
             returnFilter = GPUImageHueFilter()
-            var localFilter = returnFilter as GPUImageHueFilter
+            var localFilter = returnFilter as! GPUImageHueFilter
             localFilter.hue = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_WHITEBALANCE:
             //            val = 5000.0;
             returnFilter = GPUImageWhiteBalanceFilter()
-            var localFilter = returnFilter as GPUImageWhiteBalanceFilter
+            var localFilter = returnFilter as! GPUImageWhiteBalanceFilter
             localFilter.temperature = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_EXPOSURE:
             //            val = 1.0;
             returnFilter = GPUImageExposureFilter()
-            var localFilter = returnFilter as GPUImageExposureFilter
+            var localFilter = returnFilter as! GPUImageExposureFilter
             localFilter.exposure = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_SHARPEN:
             //            val = 1.0;
             returnFilter = GPUImageSharpenFilter()
-            var localFilter = returnFilter as GPUImageSharpenFilter
+            var localFilter = returnFilter as! GPUImageSharpenFilter
             localFilter.sharpness = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_UNSHARPMASK:
             //            val = 1.0;
             returnFilter = GPUImageUnsharpMaskFilter()
-            var localFilter = returnFilter as GPUImageUnsharpMaskFilter
+            var localFilter = returnFilter as! GPUImageUnsharpMaskFilter
             localFilter.intensity = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_GAMMA:
             //            val = 1.0;
             returnFilter = GPUImageGammaFilter()
-            var localFilter = returnFilter as GPUImageGammaFilter
+            var localFilter = returnFilter as! GPUImageGammaFilter
             localFilter.gamma = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_TONECURVE:
@@ -362,16 +364,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             let valHi = 1.5 * val;
             returnFilter = GPUImageToneCurveFilter()
             
-            var localFilter = returnFilter as GPUImageToneCurveFilter
+            var localFilter = returnFilter as! GPUImageToneCurveFilter
             localFilter.redControlPoints = [
                 NSValue(CGPoint:CGPointMake(0.0, 0.0)),
-                NSValue(CGPoint:CGPointMake(0.5, val)),
-                NSValue(CGPoint:CGPointMake(1.0, valHi)) ]
-
+                NSValue(CGPoint:CGPointMake(0.5, 0.5)),
+                NSValue(CGPoint:CGPointMake(1.0, 1.0)) ]
             localFilter.greenControlPoints = [
                 NSValue(CGPoint:CGPointMake(0.0, 0.0)),
-                NSValue(CGPoint:CGPointMake(0.5, val)),
-                NSValue(CGPoint:CGPointMake(1.0, valHi)) ]
+                NSValue(CGPoint:CGPointMake(0.5, 0.5)),
+                NSValue(CGPoint:CGPointMake(1.0, 1.0)) ]
             localFilter.blueControlPoints = [
                 NSValue(CGPoint:CGPointMake(0.0, 0.0)),
                 NSValue(CGPoint:CGPointMake(0.5, val)),
@@ -380,13 +381,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_HIGHLIGHTSHADOW:
             //            val = 1.0;
             returnFilter = GPUImageHighlightShadowFilter()
-            var localFilter = returnFilter as GPUImageHighlightShadowFilter
+            var localFilter = returnFilter as! GPUImageHighlightShadowFilter
             localFilter.highlights = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_HAZE:
             //            val = 0.2;
             returnFilter = GPUImageHazeFilter()
-            var localFilter = returnFilter as GPUImageHazeFilter
+            var localFilter = returnFilter as! GPUImageHazeFilter
             localFilter.distance = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_AVERAGECOLOR:
@@ -398,31 +399,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_HISTOGRAM:
             //            val = 16.0;
             returnFilter = GPUImageHistogramFilter(histogramType: kGPUImageHistogramRGB)
-            var localFilter = returnFilter as GPUImageHistogramFilter
+            var localFilter = returnFilter as! GPUImageHistogramFilter
             localFilter.downsamplingFactor = uival
 
         case GPUImageShowcaseFilterType.GPUIMAGE_HISTOGRAM_EQUALIZATION:
             //            val = 16.0;
             returnFilter = GPUImageHistogramEqualizationFilter(histogramType: kGPUImageHistogramLuminance)
-            var localFilter = returnFilter as GPUImageHistogramEqualizationFilter
+            var localFilter = returnFilter as! GPUImageHistogramEqualizationFilter
             localFilter.downsamplingFactor = uival
 
         case GPUImageShowcaseFilterType.GPUIMAGE_THRESHOLD:
             //            val = 0.5;
             returnFilter = GPUImageLuminanceThresholdFilter()
-            var localFilter = returnFilter as GPUImageLuminanceThresholdFilter
+            var localFilter = returnFilter as! GPUImageLuminanceThresholdFilter
             localFilter.threshold = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_ADAPTIVETHRESHOLD:
             //            val = 1.0;
             returnFilter = GPUImageAdaptiveThresholdFilter()
-            var localFilter = returnFilter as GPUImageAdaptiveThresholdFilter
+            var localFilter = returnFilter as! GPUImageAdaptiveThresholdFilter
             localFilter.blurRadiusInPixels = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_AVERAGELUMINANCETHRESHOLD:
             //            val = 1.0;
             returnFilter = GPUImageAverageLuminanceThresholdFilter()
-            var localFilter = returnFilter as GPUImageAverageLuminanceThresholdFilter
+            var localFilter = returnFilter as! GPUImageAverageLuminanceThresholdFilter
             localFilter.thresholdMultiplier = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CROP:
@@ -432,14 +433,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 
         case GPUImageShowcaseFilterType.GPUIMAGE_MASK:
             returnFilter = GPUImageMaskFilter()
-            var localFilter = returnFilter as GPUImageMaskFilter
+            var localFilter = returnFilter as! GPUImageMaskFilter
             localFilter.setBackgroundColorRed(0.0, green:1.0, blue:0.0, alpha:1.0)
         
 
         case GPUImageShowcaseFilterType.GPUIMAGE_TRANSFORM:
             //            val = 2.0;
             returnFilter = GPUImageTransformFilter()
-            var localFilter = returnFilter as GPUImageTransformFilter
+            var localFilter = returnFilter as! GPUImageTransformFilter
             localFilter.affineTransform = CGAffineTransformMakeRotation(2.0)
             //            localFilter.setIgnoreAspectRatio(true);
 
@@ -452,13 +453,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             perspectiveTransform = CATransform3DScale(perspectiveTransform,val, val, val)
             perspectiveTransform = CATransform3DRotate(perspectiveTransform, val, 0.0, 1.0, 0.0)
             
-            var localFilter = returnFilter as GPUImageTransformFilter
+            var localFilter = returnFilter as! GPUImageTransformFilter
             localFilter.transform3D = perspectiveTransform
 
         case GPUImageShowcaseFilterType.GPUIMAGE_SOBELEDGEDETECTION:
             //            val = 0.25;
             returnFilter = GPUImageSobelEdgeDetectionFilter()
-            var localFilter = returnFilter as GPUImageSobelEdgeDetectionFilter
+            var localFilter = returnFilter as! GPUImageSobelEdgeDetectionFilter
             localFilter.edgeStrength = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_XYGRADIENT:
@@ -467,50 +468,50 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_HARRISCORNERDETECTION:
             //            val = 0.2;
             returnFilter = GPUImageHarrisCornerDetectionFilter()
-            var localFilter = returnFilter as GPUImageHarrisCornerDetectionFilter
+            var localFilter = returnFilter as! GPUImageHarrisCornerDetectionFilter
             localFilter.threshold = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_NOBLECORNERDETECTION:
             //            val = 0.2;
             returnFilter = GPUImageNobleCornerDetectionFilter()
-            var localFilter = returnFilter as GPUImageNobleCornerDetectionFilter
+            var localFilter = returnFilter as! GPUImageNobleCornerDetectionFilter
             localFilter.threshold = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_SHITOMASIFEATUREDETECTION:
             //            val = 0.2;
             returnFilter = GPUImageShiTomasiFeatureDetectionFilter()
-            var localFilter = returnFilter as GPUImageShiTomasiFeatureDetectionFilter
+            var localFilter = returnFilter as! GPUImageShiTomasiFeatureDetectionFilter
             localFilter.threshold = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_HOUGHTRANSFORMLINEDETECTOR:
             //            val = 0.6;
             returnFilter = GPUImageHoughTransformLineDetector()
-            var localFilter = returnFilter as GPUImageHoughTransformLineDetector
+            var localFilter = returnFilter as! GPUImageHoughTransformLineDetector
             localFilter.lineDetectionThreshold = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_PREWITTEDGEDETECTION:
             //            val = 1.0;
             returnFilter = GPUImagePrewittEdgeDetectionFilter()
-            var localFilter = returnFilter as GPUImagePrewittEdgeDetectionFilter
+            var localFilter = returnFilter as! GPUImagePrewittEdgeDetectionFilter
             localFilter.edgeStrength = val
         
         case GPUImageShowcaseFilterType.GPUIMAGE_CANNYEDGEDETECTION:
             //            val = 1.0;
             returnFilter = GPUImageCannyEdgeDetectionFilter()
-            var localFilter = returnFilter as GPUImageCannyEdgeDetectionFilter
+            var localFilter = returnFilter as! GPUImageCannyEdgeDetectionFilter
             localFilter.blurTexelSpacingMultiplier = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_THRESHOLDEDGEDETECTION:
             //            val = 0.25;
             returnFilter = GPUImageThresholdEdgeDetectionFilter()
-            var localFilter = returnFilter as GPUImageThresholdEdgeDetectionFilter
+            var localFilter = returnFilter as! GPUImageThresholdEdgeDetectionFilter
             localFilter.threshold = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_LOCALBINARYPATTERN:
             //            val = 1.0;
             returnFilter = GPUImageLocalBinaryPatternFilter()
             let multiplier = val as CGFloat;
-            var localFilter = returnFilter as GPUImageLocalBinaryPatternFilter
+            var localFilter = returnFilter as! GPUImageLocalBinaryPatternFilter
             localFilter.texelWidth = multiplier / self.view.bounds.size.width
             localFilter.texelHeight = multiplier / self.view.bounds.size.height
 
@@ -520,31 +521,31 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_LOWPASS:
             //            val = 0.5;
             returnFilter = GPUImageLowPassFilter()
-            var localFilter = returnFilter as GPUImageLowPassFilter
+            var localFilter = returnFilter as! GPUImageLowPassFilter
             localFilter.filterStrength = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_HIGHPASS:
             //            val = 0.5;
             returnFilter = GPUImageHighPassFilter()
-            var localFilter = returnFilter as GPUImageHighPassFilter
+            var localFilter = returnFilter as! GPUImageHighPassFilter
             localFilter.filterStrength = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_MOTIONDETECTOR:
             //            val = 0.5;
             returnFilter = GPUImageMotionDetector()
-            var localFilter = returnFilter as GPUImageMotionDetector
+            var localFilter = returnFilter as! GPUImageMotionDetector
             localFilter.lowPassFilterStrength = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_SKETCH:
             //            val = 0.25;
             returnFilter = GPUImageSketchFilter()
-            var localFilter = returnFilter as GPUImageSketchFilter
+            var localFilter = returnFilter as! GPUImageSketchFilter
             localFilter.edgeStrength = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_THRESHOLDSKETCH:
             //            val = 0.25;
             returnFilter = GPUImageThresholdSketchFilter()
-            var localFilter = returnFilter as GPUImageThresholdSketchFilter
+            var localFilter = returnFilter as! GPUImageThresholdSketchFilter
             localFilter.threshold = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_TOON:
@@ -553,13 +554,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_SMOOTHTOON:
             //            val = 1.0;
             returnFilter = GPUImageSmoothToonFilter()
-            var localFilter = returnFilter as GPUImageSmoothToonFilter
+            var localFilter = returnFilter as! GPUImageSmoothToonFilter
             localFilter.blurRadiusInPixels = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_TILTSHIFT:
             //            val = 0.5;
             returnFilter = GPUImageTiltShiftFilter()
-            var localFilter = returnFilter as GPUImageTiltShiftFilter
+            var localFilter = returnFilter as! GPUImageTiltShiftFilter
             localFilter.topFocusLevel = val - 0.1
             localFilter.bottomFocusLevel = val + 0.1
             localFilter.focusFallOffRate = 0.2
@@ -574,7 +575,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             //                {-1.0f,  1.0f, 1.0f},
             //                { 0.0f,  1.0f, 2.0f}
             //            }];
-            var localFilter = returnFilter as GPUImage3x3ConvolutionFilter
+            var localFilter = returnFilter as! GPUImage3x3ConvolutionFilter
             localFilter.convolutionKernel.one = GPUVector3(one: -1.0,two: 0.0,three: 1.0)
             localFilter.convolutionKernel.two = GPUVector3(one: -2.0,two: 0.0,three: 2.0)
             localFilter.convolutionKernel.three = GPUVector3(one: -1.0,two: 0.0,three: 1.0)
@@ -593,7 +594,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_EMBOSS:
             //            val = 1.0;
             returnFilter = GPUImageEmbossFilter()
-            var localFilter = returnFilter as GPUImageEmbossFilter
+            var localFilter = returnFilter as! GPUImageEmbossFilter
             localFilter.intensity = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_LAPLACIAN:
@@ -602,37 +603,37 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_POSTERIZE:
             //            val = 10.0;
             returnFilter = GPUImagePosterizeFilter()
-            var localFilter = returnFilter as GPUImagePosterizeFilter
+            var localFilter = returnFilter as! GPUImagePosterizeFilter
             localFilter.colorLevels = uival
 
         case GPUImageShowcaseFilterType.GPUIMAGE_SWIRL:
             //            val = 1.0;
             returnFilter = GPUImageSwirlFilter()
-            var localFilter = returnFilter as GPUImageSwirlFilter
+            var localFilter = returnFilter as! GPUImageSwirlFilter
             localFilter.angle = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_BULGE:
             //            val = 0.5;
             returnFilter = GPUImageBulgeDistortionFilter()
-            var localFilter = returnFilter as GPUImageBulgeDistortionFilter
+            var localFilter = returnFilter as! GPUImageBulgeDistortionFilter
             localFilter.scale = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_SPHEREREFRACTION:
             //            val = 0.15;
             returnFilter = GPUImageSphereRefractionFilter()
-            var localFilter = returnFilter as GPUImageSphereRefractionFilter
+            var localFilter = returnFilter as! GPUImageSphereRefractionFilter
             localFilter.radius = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_GLASSSPHERE:
             //            val = 0.15;
             returnFilter = GPUImageGlassSphereFilter()
-            var localFilter = returnFilter as GPUImageGlassSphereFilter
+            var localFilter = returnFilter as! GPUImageGlassSphereFilter
             localFilter.radius = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_PINCH:
             //            val = 0.5;
             returnFilter = GPUImagePinchDistortionFilter()
-            var localFilter = returnFilter as GPUImagePinchDistortionFilter
+            var localFilter = returnFilter as! GPUImagePinchDistortionFilter
             localFilter.scale = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_STRETCH:
@@ -657,7 +658,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_PERLINNOISE:
             //            val = 8.0;
             returnFilter = GPUImagePerlinNoiseFilter()
-            var localFilter = returnFilter as GPUImagePerlinNoiseFilter
+            var localFilter = returnFilter as! GPUImagePerlinNoiseFilter
             localFilter.scale = Float(val)
 
         case GPUImageShowcaseFilterType.GPUIMAGE_VORONOI:
@@ -674,7 +675,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             //            returnFilter = GPUImageVoronoiConsumerFilter()
             //
             //            jfa.sizeInPixels = CGSizeMake(1024.0, 1024.0)
-            //            var localFilter = returnFilter as GPUImageVornoiConsumerFilter
+            //            var localFilter = returnFilter as! GPUImageVornoiConsumerFilter
             //            localFilter.sizeInPixels = CGSizeMake(1024.0, 1024.0)
             //
             //
@@ -686,7 +687,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_MOSAIC:
             //            val = 0.025;
             returnFilter = GPUImageMosaicFilter()
-            var localFilter = returnFilter as GPUImageMosaicFilter
+            var localFilter = returnFilter as! GPUImageMosaicFilter
             localFilter.displayTileSize = CGSizeMake(val,val)
             localFilter.tileSet = "squares.png"
             localFilter.colorOn = false
@@ -696,14 +697,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_CHROMAKEY:
             //            val = 0.4;
             returnFilter = GPUImageChromaKeyBlendFilter()
-            var localFilter = returnFilter as GPUImageChromaKeyBlendFilter
+            var localFilter = returnFilter as! GPUImageChromaKeyBlendFilter
             localFilter.setColorToReplaceRed(0.0, green:1.0, blue:0.0)
             localFilter.thresholdSensitivity = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CHROMAKEYNONBLEND:
             //            val = 0.4;
             returnFilter = GPUImageChromaKeyFilter()
-            var localFilter = returnFilter as GPUImageChromaKeyFilter
+            var localFilter = returnFilter as! GPUImageChromaKeyFilter
             localFilter.setColorToReplaceRed(0.0, green: 1.0, blue: 0.0)
             localFilter.thresholdSensitivity = val
 
@@ -728,7 +729,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_DISSOLVE:
             //            val = 0.5;
             returnFilter = GPUImageDissolveBlendFilter()
-            var localFilter = returnFilter as GPUImageDissolveBlendFilter
+            var localFilter = returnFilter as! GPUImageDissolveBlendFilter
             localFilter.mix = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_SCREENBLEND:
@@ -776,13 +777,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_POISSONBLEND:
             //            val = 0.5;
             returnFilter = GPUImagePoissonBlendFilter()
-            var localFilter = returnFilter as GPUImagePoissonBlendFilter
+            var localFilter = returnFilter as! GPUImagePoissonBlendFilter
             localFilter.mix = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_OPACITY:
             //            val = 1.0;
             returnFilter = GPUImageOpacityFilter()
-            var localFilter = returnFilter as GPUImageOpacityFilter
+            var localFilter = returnFilter as! GPUImageOpacityFilter
             localFilter.opacity = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_CUSTOM:
@@ -792,7 +793,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_KUWAHARA:
             //            val = 3.0;
             returnFilter = GPUImageKuwaharaFilter()
-            var localFilter = returnFilter as GPUImageKuwaharaFilter
+            var localFilter = returnFilter as! GPUImageKuwaharaFilter
             localFilter.radius = uival
 
         case GPUImageShowcaseFilterType.GPUIMAGE_KUWAHARARADIUS3:
@@ -801,19 +802,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_VIGNETTE:
             //            val = 0.75;
             returnFilter = GPUImageVignetteFilter()
-            var localFilter = returnFilter as GPUImageVignetteFilter
+            var localFilter = returnFilter as! GPUImageVignetteFilter
             localFilter.vignetteEnd = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_GAUSSIAN:
             //            val = 2.0;
             returnFilter = GPUImageGaussianBlurFilter()
-            var localFilter = returnFilter as GPUImageGaussianBlurFilter
+            var localFilter = returnFilter as! GPUImageGaussianBlurFilter
             localFilter.blurRadiusInPixels = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_BOXBLUR:
             //            val = 2.0;
             returnFilter = GPUImageBoxBlurFilter()
-            var localFilter = returnFilter as GPUImageBoxBlurFilter
+            var localFilter = returnFilter as! GPUImageBoxBlurFilter
             localFilter.blurRadiusInPixels = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_MEDIAN:
@@ -822,13 +823,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_MOTIONBLUR:
             //            val = 0.0;
             returnFilter = GPUImageMotionBlurFilter()
-            var localFilter = returnFilter as GPUImageMotionBlurFilter
+            var localFilter = returnFilter as! GPUImageMotionBlurFilter
             localFilter.blurAngle = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_ZOOMBLUR:
             //            val = 1.0;
             returnFilter = GPUImageZoomBlurFilter()
-            var localFilter = returnFilter as GPUImageZoomBlurFilter
+            var localFilter = returnFilter as! GPUImageZoomBlurFilter
             localFilter.blurSize = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_IOSBLUR:
@@ -840,26 +841,26 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         case GPUImageShowcaseFilterType.GPUIMAGE_GAUSSIAN_SELECTIVE:
             //            val = 40.0/320.0;
             returnFilter = GPUImageGaussianSelectiveBlurFilter()
-            var localFilter = returnFilter as GPUImageGaussianSelectiveBlurFilter
+            var localFilter = returnFilter as! GPUImageGaussianSelectiveBlurFilter
             localFilter.excludeCircleRadius = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_GAUSSIAN_POSITION:
         //            val = 40.0/320.0;
             returnFilter = GPUImageGaussianBlurPositionFilter()
-            var localFilter = returnFilter as GPUImageGaussianBlurPositionFilter
+            var localFilter = returnFilter as! GPUImageGaussianBlurPositionFilter
             localFilter.blurRadius = val
 
         case GPUImageShowcaseFilterType.GPUIMAGE_BILATERAL:
             //            val = 1.0;
             returnFilter = GPUImageBilateralFilter()
-            var localFilter = returnFilter as GPUImageBilateralFilter
+            var localFilter = returnFilter as! GPUImageBilateralFilter
             localFilter.distanceNormalizationFactor = val
         
 
         case GPUImageShowcaseFilterType.GPUIMAGE_FILTERGROUP:
             //            val = 0.05;
             returnFilter = GPUImageFilterGroup()
-            var localFilter = returnFilter as GPUImageFilterGroup
+            var localFilter = returnFilter as! GPUImageFilterGroup
             
             var sepiaFilter = GPUImageSepiaFilter()
             sepiaFilter.intensity = val
@@ -871,14 +872,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             
             sepiaFilter.addTarget(pixellateFilter)
 
-            localFilter.initialFilters = NSArray(array: [sepiaFilter])
+            localFilter.initialFilters = NSArray(array: [sepiaFilter]) as [AnyObject]
             localFilter.terminalFilter = pixellateFilter
 
             
         case GPUImageShowcaseFilterType.GPUIMAGE_FACES:
             //            val = 1.0;
             returnFilter = GPUImageSaturationFilter()
-            var localFilter = returnFilter as GPUImageSaturationFilter
+            var localFilter = returnFilter as! GPUImageSaturationFilter
             localFilter.saturation = val
 
             
@@ -895,9 +896,12 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func applyFilters()
     {
         // placeholder for interactive filter selection
-        var filter1: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_ZOOMBLUR, params: NSDictionary(dictionary: ["val":1.0]))
-        var filter2: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_BULGE, params: NSDictionary(dictionary:["val":0.75]))
-        var aFilters: [GPUImageOutput] = [filter1,filter2]
+//        var filter1: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_ZOOMBLUR, params: NSDictionary(dictionary: ["val":1.0]))
+//        var filter2: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_BULGE, params: NSDictionary(dictionary:["val":0.75]))
+//        var aFilters: [GPUImageOutput] = [filter1,filter2]
+        
+        var filter1: GPUImageOutput = self.createFilter( GPUImageShowcaseFilterType.GPUIMAGE_TONECURVE, params: NSDictionary(dictionary: ["val":1.0]))
+         var aFilters: [GPUImageOutput] = [filter1]
         
         // arbitrary filter application
         var nFilters = aFilters.count
@@ -906,11 +910,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         for currentFilter in aFilters
         {
             if (i == 0) {
-                self.movieFile?.addTarget(currentFilter as GPUImageInput)
+                self.movieFile?.addTarget(currentFilter as! GPUImageInput)
             }
 
             if (i != 0 && i != nFilters-1) {
-                prevFilter?.addTarget(currentFilter as GPUImageInput)
+                prevFilter?.addTarget(currentFilter as! GPUImageInput)
             }
 
             if (i != nFilters-1) {
@@ -920,7 +924,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         }
         self.filter = aFilters[nFilters-1];
         if (i > 1) {
-            prevFilter?.addTarget(self.filter as GPUImageInput);
+            prevFilter?.addTarget(self.filter as! GPUImageInput);
         }
 
     }
@@ -928,7 +932,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // handy progress/timer from Marc's VideoBench
     func getTimerElapsedTime( timer: NSTimer) -> String
     {
-        var aTimeInterval = NSDate().timeIntervalSinceDate( self.mTimer?.userInfo as NSDate)
+        var aTimeInterval = NSDate().timeIntervalSinceDate( self.mTimer?.userInfo as! NSDate)
         return String(format: "%0.2f" as String, aTimeInterval)
     }
 
@@ -978,7 +982,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
         if (aFileAttributes.count > 0)
         {
-            var aFileSizeString = aFileAttributes.objectForKey(NSFileSize) as Int
+            var aFileSizeString = aFileAttributes.objectForKey(NSFileSize) as! Int
     
             return String(aFileSizeString)
         }
@@ -1025,7 +1029,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // show the video for display in case needed
         if (showOutput)
         {
-            self.filter?.addTarget(self.view as GPUImageView)
+            self.filter?.addTarget(self.view as! GPUImageView)
         }
         
         // lets create a movieWriter
@@ -1086,7 +1090,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
 //        self.movieWriter = GPUImageMovieWriter(movieURL: self.getOutputURL(), size: size, fileType: AVFileTypeQuickTimeMovie, outputSettings: oOutputSettings)
 
         self.movieWriter = GPUImageMovieWriter(movieURL: self.getOutputURL(), size: size)
-        self.filter?.addTarget(self.movieWriter as GPUImageInput)
+        self.filter?.addTarget(self.movieWriter as! GPUImageInput)
         
         // Configure this for video from the movie file, where we want to
         // preserve all video frames and audio samples
@@ -1111,7 +1115,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             var elapsedTime = self.getTimerElapsedTime(self.mTimer!)
             println("GPUPImage + OpenGL output height: \(size.height) showOutput: \(showOutput) elasped time: \(elapsedTime)s file size: \(self.outputFileSize()) bytes")
             
-            self.filter?.removeTarget(self.movieWriter as GPUImageInput)
+            self.filter?.removeTarget(self.movieWriter as! GPUImageInput)
             self.movieWriter?.finishRecording()
             
 //            var wSelf = [weak self]
